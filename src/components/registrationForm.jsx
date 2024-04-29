@@ -57,8 +57,10 @@ function RegistrationForm() {
             if (response.status === 201) {
                 // if register successfully will redirect to login page
                 console.log(response.data);
-                const token = response.data.token;
-                localStorage.setItem('token', token);
+                const userInfo = response.data;
+                console.log(userInfo);
+                // const token = response.data.token;
+                // localStorage.setItem('token', token);
                 // window.location.href = 'http://localhost:3000/auth/login';
             } else {
                 console.log('Failed to register:', response);
