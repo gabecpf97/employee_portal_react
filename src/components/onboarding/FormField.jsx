@@ -6,7 +6,7 @@ const FormField = ({ fieldName, type, changeFn, value, isRequire }) => {
       <input
         type={type}
         onChange={(e) => changeFn(e)}
-        value={value}
+        value={value ? value : ""}
         required={isRequire}
       ></input>
     </div>

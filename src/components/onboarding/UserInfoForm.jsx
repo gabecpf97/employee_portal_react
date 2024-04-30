@@ -17,6 +17,8 @@ const UserInfoForm = (props) => {
     userPreferedName,
     ssn,
     dob,
+    gender,
+    profilePic,
   } = props;
 
   return (
@@ -54,6 +56,7 @@ const UserInfoForm = (props) => {
         fieldName="Profile Picture"
         type="file"
         changeFn={(e) => onProfilePicChange(e)}
+        value={profilePic}
         isRequire={false}
       />
       <FormField
@@ -72,7 +75,7 @@ const UserInfoForm = (props) => {
       />
       <label>Gender: </label>
       <div className="form_field">
-        <select onChange={(e) => onGenderChange(e)}>
+        <select value={gender} onChange={(e) => onGenderChange(e)}>
           <option value=""></option>
           <option value="male">male</option>
           <option value="female">female</option>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import UserInfoForm from "./UserInfoForm";
 import AddressForm from "./AddressForm";
 import PhoneForm from "./PhoneForm";
@@ -6,6 +6,11 @@ import CarForm from "./CarForm";
 import AuthForm from "./AuthForm";
 import ReferenceForm from "./ReferenceForm";
 import EmeContactsDiv from "./EmeContacsList";
+import {
+  getApplication,
+  postApplication,
+} from "../../store/slices/application.slice";
+import { useDispatch, useSelector } from "react-redux";
 
 const defaultContact = {
   fname: "",
@@ -17,6 +22,8 @@ const defaultContact = {
 };
 
 const OnboardingForm = () => {
+  const application = useSelector(getApplication.selectAll)[0];
+  const dispatch = useDispatch();
   const [userFirstName, setUserFirstName] = useState("");
   const [userLastName, setUserLastName] = useState("");
   const [userMiddleName, setUserMiddleName] = useState("");
@@ -54,9 +61,60 @@ const OnboardingForm = () => {
   const [refRel, setRefRel] = useState("");
   const [contacts, setContacts] = useState([defaultContact]);
 
+  useEffect(() => {
+    // set form value when application is present and status is rejected
+    if (application && application.status === "rejected") {
+      setUserFirstName(application.firstName);
+      setUserLastName(application.lastName);
+      setUserMiddleName(application.middleName);
+      setUserPreferedName(application.preferedName);
+      setProfilePic(application.profilePic);
+      setSsn(application.SSN);
+      setDob(application.DOB);
+      setGender(application.gender);
+      setBuilding(application.address.buildingAptNum);
+      setStreet(application.address.street);
+      setCity(application.address.city);
+      setState(application.address.state);
+      setZip(application.address.zip);
+      setCellPhone(application.cellPhone);
+      setWorkPhone(application.workPhone);
+      setMaker(application.car.make);
+      setModel(application.car.model);
+      setColor(application.car.color);
+      setCitiBool(application.citizenship ? true : false);
+      setCitiType(application.citizenship);
+      setFormType(application.workAuthorization.type);
+      setOPTReceipt(
+        application.workAuthorization
+          ? application.workAuthorization.document
+          : ""
+      );
+      setOtherForm(
+        application.workAuthorization.type == "other"
+          ? application.workAuthorization.document
+          : ""
+      );
+      setStartDate(application.workAuthorization.startDate);
+      setEndDate(application.workAuthorization.endDate);
+      setDriverBool(application.driverLicense ? true : false);
+      setDriverNum(application.driverLicense.number);
+      setExpDate(application.driverLicense.expirationDate);
+      setDriverFile(application.driverLicense.document);
+      setRefFname(application.reference.firstName);
+      setRefLname(application.reference.lastName);
+      setRefMname(application.reference.middleName);
+      setRefPhone(application.reference.phone);
+      setRefEmail(application.reference.email);
+      setRefRel(application.reference.relationship);
+      setContacts(application.emergency);
+    }
+  }, [application]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const application = {
+    const newApplication = {
+      ...application,
       firstName: userFirstName,
       lastName: userLastName,
       middleName: userMiddleName,
@@ -102,26 +160,8 @@ const OnboardingForm = () => {
       emergency: contacts,
       feedback: "",
     };
-    console.log(application);
-    try {
-      const response = await fetch("url", {
-        method: "POST",
-        body: JSON.stringify(application),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await response.json();
-      if (response.ok) {
-        // redirect to get application page
-        console.log(data);
-      } else {
-        console.log(data.message);
-      }
-    } catch (err) {
-      console.log(err);
-      // error handle
-    }
+    console.log(newApplication);
+    dispatch(postApplication(newApplication));
   };
 
   const onUserFirstNameChange = (e) => {
@@ -307,6 +347,8 @@ const OnboardingForm = () => {
         userPreferedName={userPreferedName}
         ssn={ssn}
         dob={dob}
+        gender={gender}
+        profilePic={profilePic}
       />
       <AddressForm
         onBuildingChange={onBuildingChange}
