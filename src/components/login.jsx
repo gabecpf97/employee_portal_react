@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setUsername } from "../store/slices/user.slice";
 import { useNavigate } from "react-router-dom";
+// import Button from "@mui/material/Button";
+import { Input, Button } from "@mui/material";
 
 function Login() {
   const [username, updateUsername] = useState("");
@@ -47,18 +49,18 @@ function Login() {
   return (
     <form onSubmit={handleSubmit}>
       <label>Username:</label>
-      <input
+      <Input
         type="text"
         value={username}
         onChange={(e) => updateUsername(e.target.value)}
       />
       <label>Password:</label>
-      <input
+      <Input
         type="text"
         value={password}
         onChange={(e) => updatePassword(e.target.value)}
       />
-      <button>Login</button>
+      <Button type="submit">Login</Button>
     </form>
   );
 }

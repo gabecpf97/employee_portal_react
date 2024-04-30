@@ -1,10 +1,12 @@
-import { Link } from "react-router-dom";
+import Link from "@mui/material/Link";
 
 function PageNotFound() {
   return (
     <div>
       <h1>404: Page Not Found!</h1>
-      <Link to="/">Go back to Homepage</Link>
+      <Link underline="none" href="/">
+        Go back to Homepage
+      </Link>
     </div>
   );
 }
