@@ -2,7 +2,7 @@ import { Provider } from "react-redux";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import store from "./store/store";
 
-import RegistrationForm from "./components/registrationForm";
+import RegistrationForm from "./components/registration/registrationForm";
 import OnboardingForm from "./components/onboarding/OnboardingForm";
 import Login from "./components/login";
 import Home from "./components/Home";
@@ -13,7 +13,7 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/registration" element={<RegistrationForm />} />
+          <Route path="/registration/:token" element={<RegistrationForm />} />
           <Route path="/onboarding/create" element={<OnboardingForm />} />
           <Route path="/login" element={<Login />} />
           <Route path="*" element={<PageNotFound />} />
