@@ -7,21 +7,21 @@ import {
 export const postApplication = createAsyncThunk(
   "application/postApp",
   async (theApplication) => {
-    console.log(theApplication);
-    // const response = await fetch("url", {
-    //   method: "POST",
-    //   body: JSON.stringify(theApplication),
-    //   headers: {
-    //     "Content-type": "application/json",
-    //   },
-    // });
-    // const data = await response.json();
-    // if (!response.ok) {
-    //   console.log("error handle");
-    // } else {
-    //   return data;
-    // }
-    return theApplication;
+    console.log(theApplication.get("picture"));
+    const response = await fetch(`http://localhost:3000/application/create`, {
+      method: "POST",
+      body: theApplication,
+      headers: {
+        authorization: `bearer ${localStorage.getItem("authToken")}`,
+      },
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      console.log(data.message);
+    } else {
+      return data;
+    }
+    // return theApplication;
   }
 );
 

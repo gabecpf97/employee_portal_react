@@ -12,7 +12,9 @@ const Onboarding = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchApplication());
+    if (localStorage.getItem("status") !== "not start") {
+      dispatch(fetchApplication());
+    }
   }, [dispatch]);
 
   return (
@@ -23,6 +25,7 @@ const Onboarding = () => {
             <div className="application_feedback">
               <h3>Feedback: </h3>
               <p>Feedback here</p>
+              <FileSummary />
             </div>
           )}
           {application.status === "pending" && (
@@ -30,10 +33,9 @@ const Onboarding = () => {
               <h3>Pending Please wait for HR to review your application.</h3>
             </div>
           )}
-          <OnboardingForm />
-          <FileSummary />
         </>
       )}
+      <OnboardingForm />
     </div>
   );
 };

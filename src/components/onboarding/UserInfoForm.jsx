@@ -57,7 +57,6 @@ const UserInfoForm = (props) => {
         type="file"
         changeFn={(e) => onProfilePicChange(e)}
         value={profilePic}
-        isRequire={false}
       />
       <FormField
         fieldName="SSN"

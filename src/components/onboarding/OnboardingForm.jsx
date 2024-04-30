@@ -120,48 +120,54 @@ const OnboardingForm = () => {
       middleName: userMiddleName,
       preferedName: userPreferedName,
       picture: profilePic,
-      address: {
+      address: JSON.stringify({
         buildingAptNum: building,
         street: street,
         city: city,
         state: state,
         zip: zip,
-      },
+      }),
       cellPhone: cellphone,
       workPhone: workphone,
-      car: {
+      car: JSON.stringify({
         make: maker,
         model: model,
         color: color,
-      },
+      }),
       email: "email", //get from token
       SSN: ssn,
       DOB: dob,
       gender: gender,
       citizenship: citiType,
-      workAuthorization: {
+      workAuthorization: JSON.stringify({
         type: formType,
         document: optReceipt,
         startDate: startDate,
         endDate: endDate,
-      },
-      driverLicense: {
+      }),
+      driverLicense: JSON.stringify({
         number: driverNum,
         expirationDate: expDate,
         document: driverFile,
-      },
-      reference: {
+      }),
+      reference: JSON.stringify({
         firstName: refFname,
         lastName: refLname,
         phone: refPhone,
         email: refEmail,
         relationship: refRel,
-      },
-      emergency: contacts,
+      }),
+      emergency: contacts.map((value) => JSON.stringify(value)),
       feedback: "",
     };
-    console.log(newApplication);
-    dispatch(postApplication(newApplication));
+    if (localStorage.getItem("status") === "not start") {
+      newApplication.userId = "662aab44ea0ffbbd333fae26"; // for testing
+    }
+    const formData = new FormData();
+    for (const key in newApplication) {
+      formData.append(key, newApplication[key]);
+    }
+    dispatch(postApplication(formData));
   };
 
   const onUserFirstNameChange = (e) => {
@@ -181,7 +187,8 @@ const OnboardingForm = () => {
   };
 
   const onProfilePicChange = (e) => {
-    setProfilePic(e.target.value);
+    console.log(e.target.files[0]);
+    setProfilePic(e.target.files[0]);
   };
 
   const onSsnChange = (e) => {
@@ -253,7 +260,7 @@ const OnboardingForm = () => {
   };
 
   const onOPtReceiptChange = (e) => {
-    setOPTReceipt(e.target.value);
+    setOPTReceipt(e.target.files[0]);
   };
 
   const onOtherFormChange = (e) => {
@@ -285,7 +292,7 @@ const OnboardingForm = () => {
   };
 
   const onDriverFileChange = (e) => {
-    setDriverFile(e.target.value);
+    setDriverFile(e.target.files[0]);
   };
 
   const onRefFnameChange = (e) => {
@@ -332,6 +339,7 @@ const OnboardingForm = () => {
 
   return (
     <form onSubmit={(e) => handleSubmit(e)}>
+      <h3>Onboarding Application</h3>
       <UserInfoForm
         onUserFirstNameChange={onUserFirstNameChange}
         onUserLastNameChange={onUserLastNameChange}
@@ -367,7 +375,7 @@ const OnboardingForm = () => {
         onWorkPhoneChange={onWorkPhoneChange}
         cellphone={cellphone}
         workphone={workphone}
-        email="empty"
+        email="empty@email.com"
       />
       <CarForm
         onMakerChange={onMakerChange}
@@ -390,6 +398,7 @@ const OnboardingForm = () => {
         onExpDateChagne={onExpDateChagne}
         onDriverFileChange={onDriverFileChange}
         citiBool={citiBool}
+        formType={formType}
         optReceipt={optReceipt}
         otherForm={otherForm}
         startDate={startDate}
@@ -397,6 +406,7 @@ const OnboardingForm = () => {
         driverBool={driverBool}
         driverNum={driverNum}
         expDate={expDate}
+        driverFile={driverFile}
       />
       <ReferenceForm
         onRefFnameChange={onRefFnameChange}

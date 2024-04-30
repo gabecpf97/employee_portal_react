@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import store from "./store/store";
 
 import RegistrationForm from "./components/registration/registrationForm";
-import OnboardingForm from "./components/onboarding/OnboardingForm";
 import Login from "./components/login";
 import Home from "./components/Home";
 import PageNotFound from "./components/PageNotFound";
