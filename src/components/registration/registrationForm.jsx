@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setUsername, setPassword, setEmail } from "../../store/slices/user.slice";
-import { useLocation, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 // function to sanitize the input fields
 function sanitizeInput(input) {
