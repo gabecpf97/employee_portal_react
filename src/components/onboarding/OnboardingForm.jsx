@@ -8,22 +8,22 @@ import ReferenceForm from "./ReferenceForm";
 import EmeContactsDiv from "./EmeContacsList";
 import {
   getApplication,
-  postApplication,
+  setApplication,
 } from "../../store/slices/application.slice";
 import { useDispatch, useSelector } from "react-redux";
 
 const defaultContact = {
-  fname: "",
-  lname: "",
-  mname: "",
+  firstName: "",
+  lastName: "",
+  middleName: "",
   phone: "",
   email: "",
-  rel: "",
+  relationship: "",
 };
 
 const OnboardingForm = () => {
-  const application = useSelector(getApplication.selectAll)[0];
   const dispatch = useDispatch();
+  const application = useSelector(getApplication.selectAll)[0];
   const [userFirstName, setUserFirstName] = useState("");
   const [userLastName, setUserLastName] = useState("");
   const [userMiddleName, setUserMiddleName] = useState("");
@@ -60,6 +60,7 @@ const OnboardingForm = () => {
   const [refEmail, setRefEmail] = useState("");
   const [refRel, setRefRel] = useState("");
   const [contacts, setContacts] = useState([defaultContact]);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     // set form value when application is present and status is rejected
@@ -134,22 +135,18 @@ const OnboardingForm = () => {
         model: model,
         color: color,
       }),
-      email: "email", //get from token
+      email: "email@email.com", //get from token
       SSN: ssn,
       DOB: dob,
       gender: gender,
-      citizenship: citiType,
-      workAuthorization: JSON.stringify({
-        type: formType,
-        document: optReceipt,
-        startDate: startDate,
-        endDate: endDate,
-      }),
-      driverLicense: JSON.stringify({
-        number: driverNum,
-        expirationDate: expDate,
-        document: driverFile,
-      }),
+      citizenship: citiType ? citiType : "non-citizen",
+      workAuthorization_type: formType,
+      workAuthorization_document: optReceipt,
+      workAuthorization_startDate: startDate,
+      workAuthorization_endDate: endDate,
+      driverLicense_number: driverNum,
+      driverLicense_expirationDate: expDate,
+      driverLicense_document: driverFile,
       reference: JSON.stringify({
         firstName: refFname,
         lastName: refLname,
@@ -162,12 +159,27 @@ const OnboardingForm = () => {
     };
     if (localStorage.getItem("status") === "not start") {
       newApplication.userId = "662aab44ea0ffbbd333fae26"; // for testing
+      newApplication.status = "not start"; // for testing
     }
     const formData = new FormData();
     for (const key in newApplication) {
       formData.append(key, newApplication[key]);
     }
-    dispatch(postApplication(formData));
+    const response = await fetch(`http://localhost:3000/application/create`, {
+      method: "POST",
+      body: formData,
+      headers: {
+        authorization: `bearer ${localStorage.getItem("authToken")}`,
+      },
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      setError(data.message);
+    } else {
+      console.log(data.application);
+      dispatch(setApplication(data.application));
+      localStorage.setItem("status", "pending");
+    }
   };
 
   const onUserFirstNameChange = (e) => {
@@ -187,7 +199,6 @@ const OnboardingForm = () => {
   };
 
   const onProfilePicChange = (e) => {
-    console.log(e.target.files[0]);
     setProfilePic(e.target.files[0]);
   };
 
@@ -340,6 +351,7 @@ const OnboardingForm = () => {
   return (
     <form onSubmit={(e) => handleSubmit(e)}>
       <h3>Onboarding Application</h3>
+      {error && <h4>{error}</h4>}
       <UserInfoForm
         onUserFirstNameChange={onUserFirstNameChange}
         onUserLastNameChange={onUserLastNameChange}
@@ -398,6 +410,7 @@ const OnboardingForm = () => {
         onExpDateChagne={onExpDateChagne}
         onDriverFileChange={onDriverFileChange}
         citiBool={citiBool}
+        citiType={citiType}
         formType={formType}
         optReceipt={optReceipt}
         otherForm={otherForm}

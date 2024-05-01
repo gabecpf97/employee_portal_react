@@ -13,22 +13,22 @@ const EmeContactForm = (props) => {
       <FormField
         fieldName="First Name"
         type="text"
-        changeFn={(e) => onChangeToField(e, "fname")}
-        value={contact.fname}
+        changeFn={(e) => onChangeToField(e, "firstName")}
+        value={contact.firstName}
         isRequire={false}
       />
       <FormField
         fieldName="Last Name"
         type="text"
-        changeFn={(e) => onChangeToField(e, "lname")}
-        value={contact.lname}
+        changeFn={(e) => onChangeToField(e, "lastName")}
+        value={contact.lastName}
         isRequire={false}
       />
       <FormField
         fieldName="Middle Name"
         type="text"
-        changeFn={(e) => onChangeToField(e, "mname")}
-        value={contact.mname}
+        changeFn={(e) => onChangeToField(e, "middleName")}
+        value={contact.middleName}
         isRequire={false}
       />
       <FormField
@@ -48,8 +48,8 @@ const EmeContactForm = (props) => {
       <FormField
         fieldName="relationship"
         type="text"
-        changeFn={(e) => onChangeToField(e, "rel")}
-        value={contact.rel}
+        changeFn={(e) => onChangeToField(e, "relationship")}
+        value={contact.relationship}
         isRequire={false}
       />
       {i > 0 && (

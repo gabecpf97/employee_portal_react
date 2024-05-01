@@ -15,6 +15,7 @@ const AuthForm = (props) => {
     onExpDateChagne,
     onDriverFileChange,
     citiBool,
+    citiType,
     formType,
     optReceipt,
     otherForm,
@@ -23,6 +24,7 @@ const AuthForm = (props) => {
     driverBool,
     driverNum,
     expDate,
+    driverFile,
   } = props;
   return (
     <div className="work_authorization_field">
@@ -37,7 +39,7 @@ const AuthForm = (props) => {
       {citiBool === true && (
         <div className="citizen_yes">
           <div className="form_field">
-            <select onChange={(e) => onCitiTypeChange(e)}>
+            <select value={citiType} onChange={(e) => onCitiTypeChange(e)}>
               <option value="Green Card">Green Card</option>
               <option value="Citizen">Citizen</option>
             </select>
@@ -119,6 +121,7 @@ const AuthForm = (props) => {
               fieldName="upload copy of license"
               type="file"
               changeFn={(e) => onDriverFileChange(e)}
+              value={driverFile}
               isRequire={false}
             />
           </>

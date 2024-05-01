@@ -4,27 +4,6 @@ import {
   createSlice,
 } from "@reduxjs/toolkit";
 
-export const postApplication = createAsyncThunk(
-  "application/postApp",
-  async (theApplication) => {
-    console.log(theApplication.get("picture"));
-    const response = await fetch(`http://localhost:3000/application/create`, {
-      method: "POST",
-      body: theApplication,
-      headers: {
-        authorization: `bearer ${localStorage.getItem("authToken")}`,
-      },
-    });
-    const data = await response.json();
-    if (!response.ok) {
-      console.log(data.message);
-    } else {
-      return data;
-    }
-    // return theApplication;
-  }
-);
-
 export const fetchApplication = createAsyncThunk(
   "application/fetchApp",
   async () => {
@@ -102,9 +81,6 @@ const applicationSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchApplication.fulfilled, (state, action) => {
-      applicationAdapter.setOne(state, action.payload);
-    });
-    builder.addCase(postApplication.fulfilled, (state, action) => {
       applicationAdapter.setOne(state, action.payload);
     });
   },
