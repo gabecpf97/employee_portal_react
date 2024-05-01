@@ -159,16 +159,22 @@ const OnboardingForm = () => {
           email: refEmail,
           relationship: refRel,
         }),
-        emergency: contacts.map((value) => JSON.stringify(value)),
+        emergency: contacts,
         feedback: "",
       };
-      if (localStorage.getItem("status") === "not start") {
-        newApplication.userId = "662aab44ea0ffbbd333fae26"; // for testing
-        newApplication.status = "not start"; // for testing
-      }
+      // if (localStorage.getItem("status") === "not start") {
+      newApplication.userId = "662aab44ea0ffbbd333fae26"; // for testing
+      newApplication.status = "not start"; // for testing
+      // }
       const formData = new FormData();
       for (const key in newApplication) {
-        formData.append(key, newApplication[key]);
+        if (key === "emergency") {
+          contacts.forEach((value, idx) => {
+            formData.append(`emergency[${idx}]`, JSON.stringify(value));
+          });
+        } else {
+          formData.append(key, newApplication[key]);
+        }
       }
       let url = "http://localhost:3000/application/create";
       let method = "POST";
@@ -190,7 +196,6 @@ const OnboardingForm = () => {
         console.log(data.application);
         dispatch(setApplication(data.application));
         localStorage.setItem("status", "pending");
-        location.reload();
       }
     }
   };
