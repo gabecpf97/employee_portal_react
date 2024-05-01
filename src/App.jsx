@@ -7,6 +7,7 @@ import Login from "./components/login";
 import Home from "./components/Home";
 import PageNotFound from "./components/PageNotFound";
 import Onboarding from "./components/onboarding/Onboarding";
+import Visa from "./components/visa/Visa";
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
           <Route path="/registration/:token" element={<RegistrationForm />} />
           <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/visa" element={<Visa />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>
