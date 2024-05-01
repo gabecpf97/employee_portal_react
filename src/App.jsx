@@ -12,11 +12,13 @@ import Visa from "./components/visa/Visa";
 import Profile from "./components/profile/profile"
 import HousingSummary from "./components/housing/housingSummary"
 import FacilityReports from "./components/housing/facilityReports";
+import Navbar from "./components/NavBar"
 
 const App = () => {
   return (
     <Provider store={store}>
       <BrowserRouter>
+      <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/registration/:token" element={<RegistrationForm />} />
