@@ -37,6 +37,11 @@ function Login() {
       if (response.ok) {
         dispatch(setUsername(username));
         localStorage.setItem("authToken", data.token);
+
+        //temp implementation, replace with redux
+        localStorage.setItem("status", data.userStatus);
+        localStorage.setItem("userId", data.userId);
+
         navigate("/onboarding");
       } else {
         alert(data.message);
