@@ -43,15 +43,19 @@ const Visa = () => {
             your current status for {visa.step}: {visa[visa.step].status}
           </h2>
           {visa[visa.step].status === "rejected" && (
-            <h3>{visa[visa.step].feedback}</h3>
+            <h3>Feedback: {visa[visa.step].feedback}</h3>
           )}
           <h3>Your documents:</h3>
           {visa.OPTReceipt.status !== "unuploaded" && (
-            <p>{visa.OPTReceipt.document}</p>
+            <img src={visa.OPTReceipt.document} />
           )}
-          {visa.OPTEAD.status !== "unuploaded" && <p>{visa.OPTEAD.document}</p>}
-          {visa.I983.status !== "unuploaded" && <p>{visa.I983.document}</p>}
-          {visa.I20.status !== "unuploaded" && <p>{visa.I20.document}</p>}
+          {visa.OPTEAD.status !== "unuploaded" && (
+            <img src={visa.OPTEAD.document} />
+          )}{" "}
+          {visa.I983.status !== "unuploaded" && (
+            <img src={visa.I983.document} />
+          )}
+          {visa.I20.status !== "unuploaded" && <img src={visa.I20.document} />}
           {visa[visa.step].status === "unuploaded" && (
             <h4>Please upload your {visa.step} document</h4>
           )}
