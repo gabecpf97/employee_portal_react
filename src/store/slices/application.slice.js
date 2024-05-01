@@ -6,7 +6,7 @@ import {
 
 export const fetchApplication = createAsyncThunk(
   "application/fetchApp",
-  async (applicationId) => {
+  async () => {
     // const response = await fetch(
     //   `http://localhost:3000/application/${applicationId}`
     // );
