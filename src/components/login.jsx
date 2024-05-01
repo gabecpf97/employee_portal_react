@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { setUsername } from "../store/slices/user.slice";
+import { setUsername, setUser } from "../store/slices/user.slice";
 import { useNavigate } from "react-router-dom";
 // import Button from "@mui/material/Button";
 import { Input, Button } from "@mui/material";
@@ -36,6 +36,7 @@ function Login() {
 
       if (response.ok) {
         dispatch(setUsername(username));
+        dispatch(setUser(data));
         localStorage.setItem("authToken", data.token);
         navigate("/onboarding");
       } else {
