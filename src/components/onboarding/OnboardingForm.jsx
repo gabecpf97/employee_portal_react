@@ -114,188 +114,363 @@ const OnboardingForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const newApplication = {
-      ...application,
-      firstName: userFirstName,
-      lastName: userLastName,
-      middleName: userMiddleName,
-      preferedName: userPreferedName,
-      picture: profilePic,
-      address: JSON.stringify({
-        buildingAptNum: building,
-        street: street,
-        city: city,
-        state: state,
-        zip: zip,
-      }),
-      cellPhone: cellphone,
-      workPhone: workphone,
-      car: JSON.stringify({
-        make: maker,
-        model: model,
-        color: color,
-      }),
-      email: "email@email.com", //get from token
-      SSN: ssn,
-      DOB: dob,
-      gender: gender,
-      citizenship: citiType ? citiType : "non-citizen",
-      workAuthorization_type: formType,
-      workAuthorization_document: optReceipt,
-      workAuthorization_startDate: startDate,
-      workAuthorization_endDate: endDate,
-      driverLicense_number: driverNum,
-      driverLicense_expirationDate: expDate,
-      driverLicense_document: driverFile,
-      reference: JSON.stringify({
-        firstName: refFname,
-        lastName: refLname,
-        phone: refPhone,
-        email: refEmail,
-        relationship: refRel,
-      }),
-      emergency: contacts.map((value) => JSON.stringify(value)),
-      feedback: "",
-    };
-    if (localStorage.getItem("status") === "not start") {
-      newApplication.userId = "662aab44ea0ffbbd333fae26"; // for testing
-      newApplication.status = "not start"; // for testing
-    }
-    const formData = new FormData();
-    for (const key in newApplication) {
-      formData.append(key, newApplication[key]);
-    }
-    const response = await fetch(`http://localhost:3000/application/create`, {
-      method: "POST",
-      body: formData,
-      headers: {
-        authorization: `bearer ${localStorage.getItem("authToken")}`,
-      },
-    });
-    const data = await response.json();
-    if (!response.ok) {
-      setError(data.message);
-    } else {
-      console.log(data.application);
-      dispatch(setApplication(data.application));
-      localStorage.setItem("status", "pending");
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      const newApplication = {
+        ...application,
+        firstName: userFirstName,
+        lastName: userLastName,
+        middleName: userMiddleName,
+        preferedName: userPreferedName,
+        picture: profilePic,
+        address: JSON.stringify({
+          buildingAptNum: building,
+          street: street,
+          city: city,
+          state: state,
+          zip: zip,
+        }),
+        cellPhone: cellphone,
+        workPhone: workphone,
+        car: JSON.stringify({
+          make: maker,
+          model: model,
+          color: color,
+        }),
+        email: "email@email.com", //get from token
+        SSN: ssn,
+        DOB: dob,
+        gender: gender,
+        citizenship: citiType ? citiType : "non-citizen",
+        workAuthorization_type: formType,
+        workAuthorization_document: optReceipt,
+        workAuthorization_startDate: startDate,
+        workAuthorization_endDate: endDate,
+        driverLicense_number: driverNum,
+        driverLicense_expirationDate: expDate,
+        driverLicense_document: driverFile,
+        reference: JSON.stringify({
+          firstName: refFname,
+          lastName: refLname,
+          phone: refPhone,
+          email: refEmail,
+          relationship: refRel,
+        }),
+        emergency: contacts.map((value) => JSON.stringify(value)),
+        feedback: "",
+      };
+      if (localStorage.getItem("status") === "not start") {
+        newApplication.userId = "662aab44ea0ffbbd333fae26"; // for testing
+        newApplication.status = "not start"; // for testing
+      }
+      const formData = new FormData();
+      for (const key in newApplication) {
+        formData.append(key, newApplication[key]);
+      }
+      let url = "http://localhost:3000/application/create";
+      let method = "POST";
+      if (application.status === "rejected") {
+        url = `http://localhost:3000/application/update/${application._id}`;
+        method = "PUT";
+      }
+      const response = await fetch(url, {
+        method: method,
+        body: formData,
+        headers: {
+          authorization: `bearer ${localStorage.getItem("authToken")}`,
+        },
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        setError(data.message);
+      } else {
+        console.log(data.application);
+        dispatch(setApplication(data.application));
+        localStorage.setItem("status", "pending");
+        location.reload();
+      }
     }
   };
 
   const onUserFirstNameChange = (e) => {
-    setUserFirstName(e.target.value);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setUserFirstName(e.target.value);
+    }
   };
 
   const onUserLastNameChange = (e) => {
-    setUserLastName(e.target.value);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setUserLastName(e.target.value);
+    }
   };
 
   const onUserMiddleNameChange = (e) => {
-    setUserMiddleName(e.target.value);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setUserMiddleName(e.target.value);
+    }
   };
 
   const onUserPreferedNameChange = (e) => {
-    setUserPreferedName(e.target.value);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setUserPreferedName(e.target.value);
+    }
   };
 
   const onProfilePicChange = (e) => {
-    setProfilePic(e.target.files[0]);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setProfilePic(e.target.files[0]);
+    }
   };
 
   const onSsnChange = (e) => {
-    setSsn(e.target.value);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setSsn(e.target.value);
+    }
   };
 
   const onDobChange = (e) => {
-    setDob(e.target.value);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setDob(e.target.value);
+    }
   };
 
   const onGenderChange = (e) => {
-    setGender(e.target.value);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setGender(e.target.value);
+    }
   };
 
   const onBuildingChange = (e) => {
-    setBuilding(e.target.value);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setBuilding(e.target.value);
+    }
   };
 
   const onStreetChange = (e) => {
-    setStreet(e.target.value);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setStreet(e.target.value);
+    }
   };
 
   const onCityChange = (e) => {
-    setCity(e.target.value);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setCity(e.target.value);
+    }
   };
 
   const onStateChange = (e) => {
-    setState(e.target.value);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setState(e.target.value);
+    }
   };
 
   const onZipChange = (e) => {
-    setZip(e.target.value);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setZip(e.target.value);
+    }
   };
 
   const onCellPhoneChange = (e) => {
-    setCellPhone(e.target.value);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setCellPhone(e.target.value);
+    }
   };
 
   const onWorkPhoneChange = (e) => {
-    setWorkPhone(e.target.value);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setWorkPhone(e.target.value);
+    }
   };
 
   const onMakerChange = (e) => {
-    setMaker(e.target.value);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setMaker(e.target.value);
+    }
   };
 
   const onModelChange = (e) => {
-    setModel(e.target.value);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setModel(e.target.value);
+    }
   };
 
   const onColorChange = (e) => {
-    setColor(e.target.value);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setColor(e.target.value);
+    }
   };
 
   const onCitiBoolChange = (e) => {
-    if (e.target.value === "true") {
-      setCitiBool(true);
-    } else {
-      setCitiBool(false);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      if (e.target.value === "true") {
+        setCitiBool(true);
+      } else {
+        setCitiBool(false);
+      }
     }
   };
 
   const onCitiTypeChange = (e) => {
-    setCitiType(e.target.value);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setCitiType(e.target.value);
+    }
   };
 
   const onFormTypeChange = (e) => {
-    setFormType(e.target.value);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setFormType(e.target.value);
+    }
   };
 
   const onOPtReceiptChange = (e) => {
-    setOPTReceipt(e.target.files[0]);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setOPTReceipt(e.target.files[0]);
+    }
   };
 
   const onOtherFormChange = (e) => {
-    setOtherForm(e.target.value);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setOtherForm(e.target.value);
+    }
   };
 
   const onStartDateChange = (e) => {
-    setStartDate(e.target.value);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setStartDate(e.target.value);
+    }
   };
 
   const onEndDateChange = (e) => {
-    setEndDate(e.target.value);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setEndDate(e.target.value);
+    }
   };
 
   const onDriverBoolChange = (e) => {
-    if (e.target.value === "true") {
-      setDriverBool(true);
-    } else {
-      setDriverBool(false);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      if (e.target.value === "true") {
+        setDriverBool(true);
+      } else {
+        setDriverBool(false);
+      }
     }
   };
 
   const onDriverNumChange = (e) => {
-    setDriverNum(e.target.value);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setDriverNum(e.target.value);
+    }
   };
 
   const onExpDateChagne = (e) => {
@@ -303,31 +478,73 @@ const OnboardingForm = () => {
   };
 
   const onDriverFileChange = (e) => {
-    setDriverFile(e.target.files[0]);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setDriverFile(e.target.files[0]);
+    }
   };
 
   const onRefFnameChange = (e) => {
-    setRefFname(e.target.value);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setRefFname(e.target.value);
+    }
   };
 
   const onRefLnameChange = (e) => {
-    setRefLname(e.target.value);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setRefLname(e.target.value);
+    }
   };
 
   const onRefMnameChange = (e) => {
-    setRefMname(e.target.value);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setRefMname(e.target.value);
+    }
   };
 
   const onRefPhoneChange = (e) => {
-    setRefPhone(e.target.value);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setRefPhone(e.target.value);
+    }
   };
 
   const onRefEmailChange = (e) => {
-    setRefEmail(e.target.value);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setRefEmail(e.target.value);
+    }
   };
 
   const onRefrelChange = (e) => {
-    setRefRel(e.target.value);
+    if (
+      application &&
+      application.status !== "pending" &&
+      application.status !== "approved"
+    ) {
+      setRefRel(e.target.value);
+    }
   };
 
   const onContentChange = (field, fieldValue, index) => {

@@ -9,13 +9,14 @@ import {
 
 const Onboarding = () => {
   const application = useSelector(getApplication.selectAll)[0];
+  const status = localStorage.getItem("status");
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (localStorage.getItem("status") !== "not start") {
+    if (status !== "not start") {
       dispatch(fetchApplication());
     }
-  }, [dispatch]);
+  }, [dispatch, status]);
 
   return (
     <div className="onboarding">
