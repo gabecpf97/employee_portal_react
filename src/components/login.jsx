@@ -35,9 +35,6 @@ function Login() {
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem("status", data.userStatus);
-        localStorage.setItem("userId", data.userId);
-        console.log(data);
         dispatch(setUsername(username));
         localStorage.setItem("authToken", data.token);
         navigate("/onboarding");
