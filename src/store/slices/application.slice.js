@@ -16,7 +16,7 @@ export const fetchApplication = createAsyncThunk(
     // } else {
     //   return data;
     // }
-    return {};
+    return { userId: "123" };
   }
 );
 

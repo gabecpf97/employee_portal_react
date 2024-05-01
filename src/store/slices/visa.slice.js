@@ -5,45 +5,30 @@ import {
 } from "@reduxjs/toolkit";
 
 export const fetchVisa = createAsyncThunk("visa/fetchVisa", async () => {
-  // const idResponse = await fetch(`http://localhost:3000/visa/getRequestId`, {
-  //   headers: {
-  //     authorization: `Bearer ${localStorage.getItem("authToken")}`,
-  //   },
-  // });
-  // const idData = await idResponse.json();
-  // if (!idResponse.ok) {
-  //   console.log("handle error in fetchVisa");
-  // } else {
-  //   console.log(idData);
-  //   const visaResponse = await fetch(`http://localhost:3000/visa/${idData}`, {
-  //     headers: {
-  //       authorization: `Bearer ${localStorage.getItem("authToken")}`,
-  //     },
-  //   });
-  //   const data = await visaResponse.json();
-  //   if (!visaResponse.ok) {
-  //     console.log("error handle in fetchvisa visaresponse");
-  //   } else {
-  //     console.log(data);
-  //     // return data;
-  //   }
-  // }
-  return {
-    appId: "123",
-    step: "OPTReceipt",
-    OPTReceipt: {
-      status: "unuploaded",
+  const idResponse = await fetch(`http://localhost:3000/visa/getRequestId`, {
+    headers: {
+      authorization: `Bearer ${localStorage.getItem("authToken")}`,
     },
-    OPTEAD: {
-      status: "unuploaded",
-    },
-    I983: {
-      status: "unuploaded",
-    },
-    I20: {
-      status: "unuploaded",
-    },
-  };
+  });
+  const idData = await idResponse.json();
+  if (!idResponse.ok) {
+    console.log("handle error in fetchVisa");
+  } else {
+    const visaResponse = await fetch(
+      `http://localhost:3000/visa/${idData.requestId}`,
+      {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
+      }
+    );
+    const data = await visaResponse.json();
+    if (!visaResponse.ok) {
+      console.log("error handle in fetchvisa visaresponse");
+    } else {
+      return data.request;
+    }
+  }
 });
 
 const visaAdapter = createEntityAdapter({ selectId: (visa) => visa.appId });
