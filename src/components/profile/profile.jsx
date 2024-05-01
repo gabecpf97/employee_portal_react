@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Button from "@mui/material/Button";
+
 import axios from 'axios';
 
 // import { useDispatch } from "react-redux";
@@ -11,40 +14,66 @@ function Profile() {
     const status = localStorage.getItem("status");
     const userId = localStorage.getItem("userId");
     const token = localStorage.getItem("authToken");
+    
     const [userData, setUserData] = useState(null);
+    const [userEdit, setUserEdit] = useState(false);
+    
+    const navigate = useNavigate();
+
+
+    const handleLogout = () => {
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("status");
+        localStorage.setItem("isLoggedIn",false)
+        navigate("/login");
+    };
+
+    const handleUserEdit = () => {
+        setUserEdit(true)
+    };
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get(`http://localhost:3000/users/${userId}`,{
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-                console.log(response.data);
-                setUserData(response.data);
-            } catch (error) {
-                console.error('Error fetching user data:', error);
-            }
-        };
+        if (!token) {
+            navigate("/login");
+        }
+    }, [navigate, token]);
 
-        fetchData();
-    }, []);
+    useEffect(() => {
+        if (token && userId) {
+            const fetchData = async () => {
+                try {
+                    const response = await axios.get(`http://localhost:3000/users/${userId}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
+                    console.log(response.data);
+                    setUserData(response.data);
+                } catch (error) {
+                    console.error('Error fetching user data:', error);
+                }
+            };
+            fetchData();
+        }
+    }, [userId, token]);
 
   return (
     <>
         <p>status is {status}, userId is {userId}, token is {token}</p>
         <h1>Personal Profile</h1>
+        <Button onClick={handleLogout}>Logout</Button>
         {userData && (
                 <div>
                     <div>
                         <h3>Account Information</h3>
                         <label>Username:</label>
-                        <input type="text" value={userData.user.username} disabled></input><br></br>
+                        <input type="text" value={userData.user.username} disabled={!userEdit}></input><br></br>
                         <label>Email:</label>
-                        <input type="text" value={userData.user.email} disabled></input><br></br>
+                        <input type="text" value={userData.user.email} disabled={!userEdit}></input><br></br>
                         <label>Password:</label>
-                        <input type="password" value={userData.user.password} disabled></input><br></br>
+                        <input type="password" value={userData.user.password} disabled={!userEdit}></input><br></br>
+                        <Button onClick={handleUserEdit}>Edit</Button>
                     </div>
                     <div>
                         <h3>Personal Information</h3>
@@ -59,6 +88,7 @@ function Profile() {
                         <input type="text" value={userData.application.prefferedName} disabled></input><br></br>
                         <label>Profile Image:</label>
                         <p>{userData.application.picture}</p>
+                        <img src={userData.application.picture} width="200px" height="200px"></img>
                         <label>Email:</label>
                         <input type="text" value={userData.application.email} disabled></input><br></br>
                         <label>SSN:</label>

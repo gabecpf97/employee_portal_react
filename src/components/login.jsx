@@ -42,6 +42,8 @@ function Login() {
         //temp implementation, replace with redux
         localStorage.setItem("status", data.userStatus);
         localStorage.setItem("userId", data.userId);
+        localStorage.setItem("isLoggedIn", true);
+
 
         navigate("/onboarding");
       } else {
