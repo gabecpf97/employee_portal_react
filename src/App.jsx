@@ -3,10 +3,11 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import store from "./store/store";
 
 import RegistrationForm from "./components/registration/registrationForm";
-import OnboardingForm from "./components/onboarding/OnboardingForm";
 import Login from "./components/login";
 import Home from "./components/Home";
 import PageNotFound from "./components/PageNotFound";
+import Onboarding from "./components/onboarding/Onboarding";
+
 const App = () => {
   return (
     <Provider store={store}>
@@ -14,7 +15,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/registration/:token" element={<RegistrationForm />} />
-          <Route path="/onboarding/create" element={<OnboardingForm />} />
+          <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/login" element={<Login />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
