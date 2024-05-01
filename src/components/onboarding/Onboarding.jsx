@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import OnboardingForm from "./OnboardingForm";
 import FileSummary from "./FileSummary";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   fetchApplication,
   getApplication,
@@ -9,29 +10,38 @@ import {
 
 const Onboarding = () => {
   const application = useSelector(getApplication.selectAll)[0];
-  const status = localStorage.getItem("status");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (status !== "not start") {
-      dispatch(fetchApplication());
+    dispatch(fetchApplication());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (application && application.status === "approved") {
+      navigate("/");
     }
-  }, [dispatch, status]);
+  }, [application, navigate]);
 
   return (
     <div className="onboarding">
       {application && (
         <>
-          {application.status === "rejected" && (
-            <div className="application_feedback">
-              <h3>Feedback: </h3>
-              <p>Feedback here</p>
-              <FileSummary />
-            </div>
-          )}
+          <h2>Application status: {application.status}</h2>
           {application.status === "pending" && (
             <div className="application_pending">
               <h3>Pending Please wait for HR to review your application.</h3>
+            </div>
+          )}
+          {application.status !== "not start" && (
+            <div className="application_feedback">
+              {application.status === "rejected" && (
+                <>
+                  <h3>Feedback: </h3>
+                  <p>{application.feedback}</p>
+                </>
+              )}
+              <FileSummary />
             </div>
           )}
         </>
