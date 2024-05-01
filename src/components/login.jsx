@@ -38,7 +38,7 @@ function Login() {
         dispatch(setUsername(username));
         dispatch(setUser(data));
         localStorage.setItem("authToken", data.token);
-        navigate("/onboarding/create");
+        navigate("/onboarding");
       } else {
         alert(data.message);
       }

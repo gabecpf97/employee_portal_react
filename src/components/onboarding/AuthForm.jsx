@@ -15,6 +15,8 @@ const AuthForm = (props) => {
     onExpDateChagne,
     onDriverFileChange,
     citiBool,
+    citiType,
+    formType,
     optReceipt,
     otherForm,
     startDate,
@@ -22,6 +24,7 @@ const AuthForm = (props) => {
     driverBool,
     driverNum,
     expDate,
+    driverFile,
   } = props;
   return (
     <div className="work_authorization_field">
@@ -36,7 +39,7 @@ const AuthForm = (props) => {
       {citiBool === true && (
         <div className="citizen_yes">
           <div className="form_field">
-            <select onChange={(e) => onCitiTypeChange(e)}>
+            <select value={citiType} onChange={(e) => onCitiTypeChange(e)}>
               <option value="Green Card">Green Card</option>
               <option value="Citizen">Citizen</option>
             </select>
@@ -47,7 +50,7 @@ const AuthForm = (props) => {
         <div className="citizen_no">
           <h3>What is your work authorization?</h3>
           <div className="form_field">
-            <select onChange={(e) => onFormTypeChange(e)}>
+            <select value={formType} onChange={(e) => onFormTypeChange(e)}>
               <option value="H1-B">H1-B</option>
               <option value="L2">L2</option>
               <option value="F1(CPT/OPT)">F1(CPT/OPT)</option>
@@ -55,20 +58,24 @@ const AuthForm = (props) => {
               <option value="other">other</option>
             </select>
           </div>
-          <FormField
-            fieldName="OPT Receipt"
-            type="file"
-            changeFn={(e) => onOPtReceiptChange(e)}
-            value={optReceipt}
-            isRequire={false}
-          />
-          <FormField
-            fieldName="Please specific form type"
-            type="text"
-            changeFn={(e) => onOtherFormChange(e)}
-            value={otherForm}
-            isRequire={false}
-          />
+          {formType === "F1(CPT/OPT)" && (
+            <FormField
+              fieldName="OPT Receipt"
+              type="file"
+              changeFn={(e) => onOPtReceiptChange(e)}
+              value={optReceipt}
+              isRequire={false}
+            />
+          )}
+          {formType === "other" && (
+            <FormField
+              fieldName="Please specific form type"
+              type="text"
+              changeFn={(e) => onOtherFormChange(e)}
+              value={otherForm}
+              isRequire={false}
+            />
+          )}
           <FormField
             fieldName="Start Date"
             type="Date"
@@ -105,7 +112,7 @@ const AuthForm = (props) => {
             />
             <FormField
               fieldName="expiration date"
-              type="text"
+              type="Date"
               changeFn={(e) => onExpDateChagne(e)}
               value={expDate}
               isRequire={false}
@@ -114,6 +121,7 @@ const AuthForm = (props) => {
               fieldName="upload copy of license"
               type="file"
               changeFn={(e) => onDriverFileChange(e)}
+              value={driverFile}
               isRequire={false}
             />
           </>

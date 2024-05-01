@@ -2,9 +2,8 @@
 import FormField from "./FormField";
 
 const PhoneForm = (props) => {
-  const { onCellPhoneChange, onWorkPhoneChange, cellphone, workPhone, email } =
+  const { onCellPhoneChange, onWorkPhoneChange, cellphone, workphone, email } =
     props;
-
   return (
     <div className="phone_info">
       <h3>Contact information</h3>
@@ -19,7 +18,7 @@ const PhoneForm = (props) => {
         fieldName="Work Phone number"
         type="text"
         changeFn={(e) => onWorkPhoneChange(e)}
-        value={workPhone}
+        value={workphone}
         isRequire={false}
       />
       <div className="form_field">
