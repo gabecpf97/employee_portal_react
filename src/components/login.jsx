@@ -39,11 +39,10 @@ function Login() {
         dispatch(setUser(data));
         localStorage.setItem("authToken", data.token);
 
-        //temp implementation, replace with redux
-        localStorage.setItem("status", data.userStatus);
-        localStorage.setItem("userId", data.userId);
+        //for testing profile
         localStorage.setItem("isLoggedIn", true);
-
+        localStorage.setItem("userId", data.userId);
+        localStorage.setItem("userStatus", data.userStatus);
 
         navigate("/onboarding");
       } else {
