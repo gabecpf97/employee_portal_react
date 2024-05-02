@@ -10,7 +10,7 @@ const Navbar = () => {
         <nav>
             <ul>
                 <li>
-                    <NavLink to="/personal" style={({ isActive }) => ({ color: isActive ? 'blue' : 'black' })}>
+                    <NavLink to="/profile" style={({ isActive }) => ({ color: isActive ? 'blue' : 'black' })}>
                         Personal Information
                     </NavLink>
                 </li>
