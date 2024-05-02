@@ -457,7 +457,7 @@ function Profile() {
                         <p>{userData.application.driverLicense.document}</p>
                         <label>Work Authorization:</label>
                         <p>{userData.application.workAuthorization.document}</p>
-                        <input type="file" id="fileInput"></input>
+                        <input type="file" id="fileInput" disabled={!appEdit}></input><br></br>
 
 
                         <Button 
