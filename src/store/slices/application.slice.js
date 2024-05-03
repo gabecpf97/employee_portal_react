@@ -14,9 +14,12 @@ export const fetchApplication = createAsyncThunk(
     });
     const data = await response.json();
     if (!response.ok) {
-      console.log("handle error in fetchApplication");
+      console.log("handle error in fetchApplication", data);
     } else {
-      return data.application;
+      if (data.application._id) {
+        return data.application;
+      }
+      return { status: "not start" };
     }
   }
 );

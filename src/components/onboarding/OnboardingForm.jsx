@@ -153,7 +153,6 @@ const OnboardingForm = () => {
           model: model,
           color: color,
         }),
-        email: "email@email.com", //get from token
         SSN: ssn,
         DOB: dob,
         gender: gender,
@@ -203,6 +202,7 @@ const OnboardingForm = () => {
       const data = await response.json();
       if (!response.ok) {
         setError(data.message);
+        window.scrollTo({ top: 0, behavior: "smooth" });
       } else {
         console.log(data.application);
         dispatch(setApplication(data.application));
@@ -600,7 +600,6 @@ const OnboardingForm = () => {
         ssn={ssn}
         dob={dob}
         gender={gender}
-        profilePic={profilePic}
       />
       <AddressForm
         onBuildingChange={onBuildingChange}
@@ -619,7 +618,6 @@ const OnboardingForm = () => {
         onWorkPhoneChange={onWorkPhoneChange}
         cellphone={cellphone}
         workphone={workphone}
-        email="empty@email.com"
       />
       <CarForm
         onMakerChange={onMakerChange}
@@ -651,7 +649,6 @@ const OnboardingForm = () => {
         driverBool={driverBool}
         driverNum={driverNum}
         expDate={expDate}
-        driverFile={driverFile}
       />
       <ReferenceForm
         onRefFnameChange={onRefFnameChange}

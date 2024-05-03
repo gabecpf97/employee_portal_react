@@ -18,7 +18,6 @@ const UserInfoForm = (props) => {
     ssn,
     dob,
     gender,
-    profilePic,
   } = props;
 
   return (
@@ -52,12 +51,8 @@ const UserInfoForm = (props) => {
         value={userPreferedName}
         isRequire={false}
       />
-      <FormField
-        fieldName="Profile Picture"
-        type="file"
-        changeFn={(e) => onProfilePicChange(e)}
-        value={profilePic}
-      />
+      <label>Profile Picture</label>
+      <input type="file" onChange={(e) => onProfilePicChange(e)} />
       <FormField
         fieldName="SSN"
         type="text"
@@ -70,7 +65,7 @@ const UserInfoForm = (props) => {
         type="Date"
         changeFn={(e) => onDobChange(e)}
         value={dob}
-        isRequire={false}
+        isRequire={true}
       />
       <label>Gender: </label>
       <div className="form_field">

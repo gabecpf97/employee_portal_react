@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import OnboardingForm from "./OnboardingForm";
 import FileSummary from "./FileSummary";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import {
   fetchApplication,
   getApplication,
@@ -11,17 +10,10 @@ import {
 const Onboarding = () => {
   const application = useSelector(getApplication.selectAll)[0];
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(fetchApplication());
   }, [dispatch]);
-
-  useEffect(() => {
-    if (application && application.status === "approved") {
-      navigate("/");
-    }
-  }, [application, navigate]);
 
   return (
     <div className="onboarding">

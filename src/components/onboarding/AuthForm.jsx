@@ -17,14 +17,12 @@ const AuthForm = (props) => {
     citiBool,
     citiType,
     formType,
-    optReceipt,
     otherForm,
     startDate,
     endate,
     driverBool,
     driverNum,
     expDate,
-    driverFile,
   } = props;
   return (
     <div className="work_authorization_field">
@@ -59,13 +57,10 @@ const AuthForm = (props) => {
             </select>
           </div>
           {formType === "F1(CPT/OPT)" && (
-            <FormField
-              fieldName="OPT Receipt"
-              type="file"
-              changeFn={(e) => onOPtReceiptChange(e)}
-              value={optReceipt}
-              isRequire={false}
-            />
+            <>
+              <label>OPT Receipt</label>
+              <input type="file" onChange={(e) => onOPtReceiptChange(e)} />
+            </>
           )}
           {formType === "other" && (
             <FormField
@@ -108,21 +103,20 @@ const AuthForm = (props) => {
               type="text"
               changeFn={(e) => onDriverNumChange(e)}
               value={driverNum}
-              isRequire={false}
+              isRequire={driverBool}
             />
             <FormField
               fieldName="expiration date"
               type="Date"
               changeFn={(e) => onExpDateChagne(e)}
               value={expDate}
-              isRequire={false}
+              isRequire={driverBool}
             />
-            <FormField
-              fieldName="upload copy of license"
+            <label>Driver License document</label>
+            <input
               type="file"
-              changeFn={(e) => onDriverFileChange(e)}
-              value={driverFile}
-              isRequire={false}
+              onChange={(e) => onDriverFileChange(e)}
+              required={driverBool}
             />
           </>
         )}

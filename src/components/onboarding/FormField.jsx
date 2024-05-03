@@ -9,10 +9,9 @@ const FormField = ({ fieldName, type, changeFn, value, isRequire }) => {
       <input
         type={type}
         onChange={(e) => changeFn(e)}
-        value={type !== "file" ? (value ? value : "") : ""}
+        value={value ? value : ""}
         required={isRequire}
       ></input>
-      {type === "file" && <p>selected file: {value ? value.name : ""}</p>}
     </div>
   );
 };
