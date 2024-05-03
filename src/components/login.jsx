@@ -38,6 +38,12 @@ function Login() {
         dispatch(setUsername(username));
         dispatch(setUser(data));
         localStorage.setItem("authToken", data.token);
+
+        //for testing profile
+        localStorage.setItem("isLoggedIn", true);
+        localStorage.setItem("userId", data.userId);
+        localStorage.setItem("userStatus", data.userStatus);
+
         navigate("/onboarding");
       } else {
         alert(data.message);

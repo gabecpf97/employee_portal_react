@@ -22,6 +22,7 @@ const defaultContact = {
 };
 
 const OnboardingForm = () => {
+  const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const application = useSelector(getApplication.selectAll)[0];
   const [userFirstName, setUserFirstName] = useState("");
@@ -64,7 +65,7 @@ const OnboardingForm = () => {
 
   useEffect(() => {
     // set form value when application is present and status is rejected
-    if (application && application.status === "rejected") {
+    if (application && application.status !== "not start") {
       setUserFirstName(application.firstName);
       setUserLastName(application.lastName);
       setUserMiddleName(application.middleName);
@@ -83,7 +84,7 @@ const OnboardingForm = () => {
       setMaker(application.car.make);
       setModel(application.car.model);
       setColor(application.car.color);
-      setCitiBool(application.citizenship ? true : false);
+      setCitiBool(application.citizenship !== "non-citizen" ? true : false);
       setCitiType(application.citizenship);
       setFormType(application.workAuthorization.type);
       setOPTReceipt(
@@ -96,11 +97,23 @@ const OnboardingForm = () => {
           ? application.workAuthorization.document
           : ""
       );
-      setStartDate(application.workAuthorization.startDate);
-      setEndDate(application.workAuthorization.endDate);
+      setStartDate(
+        new Date(application.workAuthorization.startDate)
+          .toISOString()
+          .split("T")[0]
+      );
+      setEndDate(
+        new Date(application.workAuthorization.endDate)
+          .toISOString()
+          .split("T")[0]
+      );
       setDriverBool(application.driverLicense ? true : false);
       setDriverNum(application.driverLicense.number);
-      setExpDate(application.driverLicense.expirationDate);
+      setExpDate(
+        new Date(application.driverLicense.expirationDate)
+          .toISOString()
+          .split("T")[0]
+      );
       setDriverFile(application.driverLicense.document);
       setRefFname(application.reference.firstName);
       setRefLname(application.reference.lastName);
@@ -159,16 +172,20 @@ const OnboardingForm = () => {
           email: refEmail,
           relationship: refRel,
         }),
-        emergency: contacts.map((value) => JSON.stringify(value)),
+        emergency: contacts,
         feedback: "",
       };
-      if (localStorage.getItem("status") === "not start") {
-        newApplication.userId = "662aab44ea0ffbbd333fae26"; // for testing
-        newApplication.status = "not start"; // for testing
-      }
+      newApplication.userId = user.userId;
+      newApplication.status = user.userStatus;
       const formData = new FormData();
       for (const key in newApplication) {
-        formData.append(key, newApplication[key]);
+        if (key === "emergency") {
+          contacts.forEach((value, idx) => {
+            formData.append(`emergency[${idx}]`, JSON.stringify(value));
+          });
+        } else {
+          formData.append(key, newApplication[key]);
+        }
       }
       let url = "http://localhost:3000/application/create";
       let method = "POST";
@@ -189,8 +206,6 @@ const OnboardingForm = () => {
       } else {
         console.log(data.application);
         dispatch(setApplication(data.application));
-        localStorage.setItem("status", "pending");
-        location.reload();
       }
     }
   };
@@ -658,7 +673,11 @@ const OnboardingForm = () => {
         onAddContact={onAddContact}
         onRemoveContact={onRemoveContact}
       />
-      <button type="submit">Submit</button>
+      {application &&
+        application.status !== "pending" &&
+        application.status !== "approved" && (
+          <button type="submit">Submit</button>
+        )}
     </form>
   );
 };

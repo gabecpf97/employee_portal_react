@@ -7,21 +7,22 @@ import {
 export const fetchApplication = createAsyncThunk(
   "application/fetchApp",
   async () => {
-    // const response = await fetch(
-    //   `http://localhost:3000/application/${applicationId}`
-    // );
-    // const data = await response.json();
-    // if (!response.ok) {
-    //   console.log("handle error in fetchApplication");
-    // } else {
-    //   return data;
-    // }
-    return {};
+    const response = await fetch(`http://localhost:3000/application/getMy`, {
+      headers: {
+        authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      },
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      console.log("handle error in fetchApplication");
+    } else {
+      return data.application;
+    }
   }
 );
 
 const applicationAdapter = createEntityAdapter({
-  selectId: (application) => application.userId,
+  selectId: (application) => application._id,
 });
 
 const applicationSlice = createSlice({

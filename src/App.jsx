@@ -8,25 +8,27 @@ import Home from "./components/Home";
 import PageNotFound from "./components/PageNotFound";
 import Onboarding from "./components/onboarding/Onboarding";
 import Visa from "./components/visa/Visa";
-import HousingSummary from "./components/housing/housingSummary"
+
+import Profile from "./components/profile/profile";
+import HousingSummary from "./components/housing/housingSummary";
 import FacilityReports from "./components/housing/facilityReports";
-import Navbar from "./components/NavBar"
+import Navbar from "./components/NavBar";
 
 const App = () => {
   return (
     <Provider store={store}>
       <BrowserRouter>
-      <Navbar />
+        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/registration/:token" element={<RegistrationForm />} />
           <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/visa" element={<Visa />} />
           <Route path="/housing/:housingId" element={<HousingSummary />} />
           <Route path="/housing/reports" element={<FacilityReports />} />
           <Route path="*" element={<PageNotFound />} />
-          
         </Routes>
       </BrowserRouter>
     </Provider>
