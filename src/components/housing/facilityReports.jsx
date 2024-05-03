@@ -38,6 +38,7 @@ const FacilityReports = () => {
         const commentText = commentTexts[`${report._id}-${index}`];
         if (commentText) {
             try {
+                console.log(commentText);
                 await dispatch(addComment({ reportId: report._id, comment: commentText })).unwrap();
                 await dispatch(fetchReports());
                 setCommentTexts(prev => ({ ...prev, [`${report._id}-${index}`]: '' }));
