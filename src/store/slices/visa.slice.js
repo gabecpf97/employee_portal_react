@@ -31,7 +31,7 @@ export const fetchVisa = createAsyncThunk("visa/fetchVisa", async () => {
   }
 });
 
-const visaAdapter = createEntityAdapter({ selectId: (visa) => visa.appId });
+const visaAdapter = createEntityAdapter({ selectId: (visa) => visa._id });
 
 const visaSlice = createSlice({
   name: "visa",
