@@ -12,16 +12,16 @@ import Visa from "./components/visa/Visa";
 import Profile from "./components/profile/profile";
 import HousingSummary from "./components/housing/housingSummary";
 import FacilityReports from "./components/housing/facilityReports";
-import Navbar from "./components/NavBar";
+//import Navbar from "./components/NavBar";
 import AppLayout from "./components/AppLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
-  const isLoggedin = localStorage.getItem("authToken");
+  //const isLoggedin = localStorage.getItem("authToken");
   return (
     <Provider store={store}>
       <BrowserRouter>
-        {isLoggedin && <Navbar />}
+        {/* {isLoggedin && <Navbar />} */}
         <Routes>
           <Route
             element={
