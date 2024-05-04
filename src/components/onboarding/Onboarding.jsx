@@ -8,7 +8,9 @@ import {
 } from "../../store/slices/application.slice";
 
 const Onboarding = () => {
-  const application = useSelector(getApplication.selectAll)[0];
+  const application = useSelector((state) =>
+    getApplication.selectById(state, "application")
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {

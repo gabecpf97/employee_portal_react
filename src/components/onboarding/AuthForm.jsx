@@ -59,7 +59,11 @@ const AuthForm = (props) => {
           {formType === "F1(CPT/OPT)" && (
             <>
               <label>OPT Receipt</label>
-              <input type="file" onChange={(e) => onOPtReceiptChange(e)} />
+              <input
+                type="file"
+                onChange={(e) => onOPtReceiptChange(e)}
+                required={formType === "F1(CPT/OPT)"}
+              />
             </>
           )}
           {formType === "other" && (

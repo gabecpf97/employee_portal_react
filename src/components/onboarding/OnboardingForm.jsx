@@ -24,7 +24,9 @@ const defaultContact = {
 const OnboardingForm = () => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const application = useSelector(getApplication.selectAll)[0];
+  const application = useSelector((state) =>
+    getApplication.selectById(state, "application")
+  );
   const [userFirstName, setUserFirstName] = useState("");
   const [userLastName, setUserLastName] = useState("");
   const [userMiddleName, setUserMiddleName] = useState("");
@@ -206,6 +208,7 @@ const OnboardingForm = () => {
       } else {
         console.log(data.application);
         dispatch(setApplication(data.application));
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
     }
   };
