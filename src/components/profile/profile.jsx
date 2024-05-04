@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import { TextField, Box, Typography } from '@mui/material';
 import { Input, InputLabel} from '@mui/material';
+import validateFormData from './validation'
 
 import axios from 'axios';
 
@@ -13,7 +14,6 @@ function Profile() {
     const [originalData, setOriginalData] = useState(null);
     const [userEdit, setUserEdit] = useState(false);
     const [appEdit, setAppEdit] = useState(false);
-
     
     const token = localStorage.getItem("authToken");
     const userId = localStorage.getItem("userId");
@@ -34,7 +34,6 @@ function Profile() {
                             Authorization: `Bearer ${token}`
                         }
                     });
-                    console.log(response.data);
                     setUserData(response.data);
                     setOriginalData(response.data);
                 } catch (error) {
@@ -44,7 +43,7 @@ function Profile() {
             fetchData();
         }
     }, [navigate, token, userId]); 
-
+    
     const handleUserEdit = () => {
         setUserEdit(true)
         setUserData(prevUserData => ({
@@ -86,18 +85,24 @@ function Profile() {
     const handleAppEditSave = async () => {
         try {
             console.log(userData)
-            const fileInput = document.getElementById('fileInput');
-            const file = fileInput.files[0];
+            const fileInput_picture = document.getElementById('fileInput_picture');
+            const file_picture = fileInput_picture.files[0];
+
+            const fileInput_driver = document.getElementById('fileInput_driver');
+            const file_driver = fileInput_driver.files[0];
+
+            const fileInput_work = document.getElementById('fileInput_work');
+            const file_work = fileInput_work.files[0];
 
             const formData = new FormData();
             formData.append("userId",userId)
             formData.append("status",userStatus)
             formData.append("email",userData.application.email)
             formData.append("firstName",userData.application.firstName)
-            formData.append("lastname",userData.application.lastName)
+            formData.append("lastName",userData.application.lastName)
             formData.append("middleName",userData.application.middleName)
             formData.append("preferredName",userData.application.preferredName)
-            formData.append("picture", file)
+            formData.append("picture", file_picture)
             //const address_blob = new Blob([JSON.stringify(userData.application.address)],{ type: 'application/json' })
             formData.append("address", JSON.stringify(userData.application.address))
             formData.append("cellPhone",userData.application.cellPhone)
@@ -109,12 +114,12 @@ function Profile() {
             formData.append("gender",userData.application.gender)
             formData.append("citizenship",userData.application.citizenship)
             formData.append("workAuthorization_type",userData.application.workAuthorization.type)
-            formData.append("workAuthorization_document", file)
+            formData.append("workAuthorization_document", file_work)
             formData.append("workAuthorization_startDate",userData.application.workAuthorization.startDate)
             formData.append("workAuthorization_endDate",userData.application.workAuthorization.endDate)
             formData.append("driverLicense_number",userData.application.driverLicense.number)
             formData.append("driverLicense_expirationDate",userData.application.driverLicense.expirationDate)
-            formData.append("driverLicense_document", file)
+            formData.append("driverLicense_document", file_driver)
             //const reference_blob = new Blob([JSON.stringify(userData.application.reference)],{ type: 'application/json'})
             formData.append("reference", JSON.stringify(userData.application.reference))
             //const emergency_blob = new Blob([JSON.stringify(userData.application.emergency)],{ type: 'application/json'})
@@ -124,6 +129,11 @@ function Profile() {
             // for (let [key, value] of formData.entries()) {
             //     console.log(key, value);
             // }
+            const errors = validateFormData(formData);
+            if (errors) {
+                alert(errors);
+                return
+            } 
 
             const response = await axios.put(`http://localhost:3000/application/update/${userData.application._id}`, formData, {
                 headers: {
@@ -134,8 +144,9 @@ function Profile() {
             location.reload()
 
         } catch (error) {
-            console.error('Error changing user profile:', error);
-            setUserData(originalData);
+            alert(`Error: ${error.response.status} - ${error.response.data.message}`);
+            console.error('Error changing user profile:', error.response.data);
+            //setUserData(originalData);
         }
         setAppEdit(false)
     };
@@ -203,6 +214,26 @@ function Profile() {
         }));
     };
 
+    const handleEmergencyChange = (e, t_index) => {
+        const { name, value } = e.target;  
+        setUserData(prevUserData => ({
+            ...prevUserData,
+            application: {
+                ...prevUserData.application,
+                emergency: prevUserData.application.emergency.map(
+                    (contact, index)=>{
+                        if(index===t_index){
+                            return {...contact, [name]:value}
+                        }
+                        else{
+                            return contact
+                        }
+                    }
+                )
+            }
+        }));
+    };
+
   return (
     <>
         {/* <p>status is {userStatus}, userId is {userId}, token is {token}</p> */}
@@ -252,16 +283,17 @@ function Profile() {
                     </Box>
                     
                     <div>
-                        <Box sx={{ padding: 2 }}>
-                            <Typography variant="h6">Personal Information</Typography>
-                            <Typography variant="subtitle1" sx={{ mt: 2 }}>Basic Information</Typography>
-                            <Typography variant="subtitle1" sx={{ mt: 2, mb: 1 }}>Profile Image</Typography>
+                    <Typography variant="h6">Personal Information</Typography>
+                        <Box sx={{ padding: 2, border: '1px solid #ccc'  }}>
+                            <Typography variant="subtitle1" sx={{ }}>Basic Information</Typography>
+                            <Typography variant="subtitle2" sx={{ mt: 2, mb: 1 }}>Profile Image</Typography>
                             <img src={userData.application.picture} alt="Profile" style={{ width: 200, height: 200, marginBottom: 16 }} />
-                            <InputLabel htmlFor="fileInput">Upload File</InputLabel>
+                            <InputLabel htmlFor="fileInput" sx={{ display: appEdit ? 'flex' : 'none' }}>Upload File</InputLabel>
                                     <Input
                                         type="file"
-                                        id="fileInput"
+                                        id="fileInput_picture"
                                         disabled={!appEdit}
+                                        sx={{ display: appEdit ? 'flex' : 'none' }}
                                     />
                 
                             <TextField
@@ -326,7 +358,7 @@ function Profile() {
                             />
                             <TextField
                                 label="Date of Birth"
-                                type="date"
+                                type="text"
                                 variant="outlined"
                                 fullWidth
                                 margin="normal"
@@ -355,7 +387,7 @@ function Profile() {
                             </TextField>
                         </Box>
 
-                        <Box sx={{ padding: 2 }}>
+                        <Box sx={{ padding: 2, border: '1px solid #ccc' }}>
                             <Typography variant="subtitle1" gutterBottom>Address</Typography>
                             <TextField
                                 label="Building/Apt Number"
@@ -409,7 +441,7 @@ function Profile() {
                             />
                         </Box>
 
-                        <Box sx={{ padding: 2 }}>
+                        <Box sx={{ padding: 2, border: '1px solid #ccc' }}>
                             <Typography variant="subtitle1" gutterBottom>Contact Information</Typography>
                             <TextField
                                 label="Cell Phone"
@@ -433,7 +465,7 @@ function Profile() {
                             />
                         </Box>
 
-                        <Box sx={{ padding: 2 }}>
+                        <Box sx={{ padding: 2, border: '1px solid #ccc' }}>
                             <Typography variant="subtitle1" gutterBottom>Employment</Typography>
                             <TextField
                                 label="Visa Type"
@@ -447,7 +479,7 @@ function Profile() {
                             />
                             <TextField
                                 label="Start Date"
-                                type="date"
+                                type="text"
                                 variant="outlined"
                                 fullWidth
                                 margin="normal"
@@ -459,7 +491,7 @@ function Profile() {
                             />
                             <TextField
                                 label="End Date"
-                                type="date"
+                                type="text"
                                 variant="outlined"
                                 fullWidth
                                 margin="normal"
@@ -471,8 +503,7 @@ function Profile() {
                             />
                         </Box>
 
-                        
-                        <Box sx={{ padding: 2 }}>
+                        <Box sx={{ padding: 2, border: '1px solid #ccc' }}>
                             <Typography variant="subtitle1" gutterBottom>Emergency Contact:</Typography>
                             {userData.application.emergency.map((contact, index) => (
                                 <Box key={index} sx={{ mb: 2 }}>
@@ -483,7 +514,9 @@ function Profile() {
                                         fullWidth
                                         margin="normal"
                                         value={contact.firstName}
-                                        disabled
+                                        disabled = {!appEdit}
+                                        name="firstName"
+                                        onChange={(e) => handleEmergencyChange(e, index)}
                                     />
                                     <TextField
                                         label="Last Name"
@@ -491,7 +524,9 @@ function Profile() {
                                         fullWidth
                                         margin="normal"
                                         value={contact.lastName}
-                                        disabled
+                                        disabled={!appEdit}
+                                        name="lastName"
+                                        onChange={(e) => handleEmergencyChange(e, index)}
                                     />
                                     <TextField
                                         label="Middle Name"
@@ -499,7 +534,9 @@ function Profile() {
                                         fullWidth
                                         margin="normal"
                                         value={contact.middleName}
-                                        disabled
+                                        disabled={!appEdit}
+                                        name="middleName"
+                                        onChange={(e) => handleEmergencyChange(e, index)}
                                     />
                                     <TextField
                                         label="Email"
@@ -507,7 +544,9 @@ function Profile() {
                                         fullWidth
                                         margin="normal"
                                         value={contact.email}
-                                        disabled
+                                        disabled={!appEdit}
+                                        name="email"
+                                        onChange={(e) => handleEmergencyChange(e, index)}
                                     />
                                     <TextField
                                         label="Phone"
@@ -515,7 +554,9 @@ function Profile() {
                                         fullWidth
                                         margin="normal"
                                         value={contact.phone}
-                                        disabled
+                                        disabled={!appEdit}
+                                        name="phone"
+                                        onChange={(e) => handleEmergencyChange(e, index)}
                                     />
                                     <TextField
                                         label="Relationship"
@@ -523,34 +564,73 @@ function Profile() {
                                         fullWidth
                                         margin="normal"
                                         value={contact.relationship}
-                                        disabled
+                                        disabled={!appEdit}
+                                        name="relationship"
+                                        onChange={(e) => handleEmergencyChange(e, index)}
                                     />
                                 </Box>
                             ))}
                         </Box>
 
-                        <Box sx={{ padding: 2, marginTop: 2 }}>
-                            <Typography variant="subtitle1" gutterBottom>Documents</Typography>
-                                    <InputLabel shrink>Driver License</InputLabel>
+                        <Box sx={{ padding: 2 , border: '1px solid #ccc'}}>
+                            <Typography variant="h6" gutterBottom>Documents</Typography>
+
+                                    <Typography variant="subtitle1">Driver License</Typography>
+                                    <p>{userData.application.driverLicense.document}</p>
+                                    <a href={userData.application.driverLicense.document} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                                        <Button variant="contained" color="primary" style={{ marginRight: '10px', }}>
+                                            Preview
+                                        </Button>
+                                    </a>
+                                    <a href={userData.application.driverLicense.document}
+                                    download
+                                    style={{ textDecoration: 'none', }}>
+                                        <Button variant="contained" color="primary">
+                                            Download
+                                        </Button>
+                                    </a>
+                                    
+                                    <InputLabel htmlFor="fileInput" sx={{ display: appEdit ? 'flex' : 'none' }}>Upload File</InputLabel>
                                     <Input
-                                        fullWidth
-                                        value={userData.application.driverLicense.document}
-                                        disabled
-                                        readOnly
+                                        type="file"
+                                        id="fileInput_driver"
+                                        disabled={!appEdit}
+                                        sx={{ display: appEdit ? 'flex' : 'none' }}
                                     />
-                                    <InputLabel shrink>Work Authorization</InputLabel>
+                                    <br></br>
+                                    <hr></hr>
+                                    <br></br>
+                                    <Typography variant="subtitle1">Work Authorization</Typography>
+                                    <p>{userData.application.workAuthorization.document}</p>
+                                    <a href={userData.application.workAuthorization.document} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                                        <Button variant="contained" color="primary" style={{ marginRight: '10px', }}>
+                                            Preview
+                                        </Button>
+                                    </a>
+                                    <a href={userData.application.workAuthorization.document}
+                                    download
+                                    style={{ textDecoration: 'none' }}>
+                                        <Button variant="contained" color="primary">
+                                            Download
+                                        </Button>
+                                    </a>
+
+                                    <InputLabel htmlFor="fileInput" sx={{ display: appEdit ? 'flex' : 'none' }}>Upload File</InputLabel>
                                     <Input
-                                        fullWidth
-                                        value={userData.application.workAuthorization.document}
-                                        disabled
-                                        readOnly
+                                        type="file"
+                                        id="fileInput_work"
+                                        disabled={!appEdit}
+                                        sx={{ display: appEdit ? 'flex' : 'none' }}
                                     />
-                            <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
+                                    <hr></hr>
+
+                            
+                        </Box>
+                        <Box sx={{ display: 'flex', gap: 1, mt: 2 , mb:10}}>
                                 <Button variant="contained" onClick={handleAppEdit} sx={{ display: appEdit ? 'none' : 'flex' }}>Edit</Button>
                                 <Button variant="contained" color="primary" onClick={handleAppEditSave} sx={{ display: appEdit ? 'flex' : 'none' }}>Save</Button>
                                 <Button variant="contained" color="secondary" onClick={handleAppEditCancel} sx={{ display: appEdit ? 'flex' : 'none' }}>Cancel</Button>
                             </Box>
-                        </Box>
                     
                     </div>
                 </div>
