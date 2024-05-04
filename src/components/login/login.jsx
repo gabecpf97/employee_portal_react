@@ -46,9 +46,10 @@ function Login() {
         localStorage.setItem("userStatus", data.userStatus);
         localStorage.setItem("housingId", data.housingId);
         if (data.userStatus === "approved") {
+
           navigate("/profile");
         }
-        else{
+        else {
           navigate("/onboarding");
         }
       } else {

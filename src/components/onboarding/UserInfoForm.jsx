@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import FormField from "./FormField";
+import { Select, MenuItem, Input, InputLabel } from "@mui/material";
 
 const UserInfoForm = (props) => {
   const {
@@ -51,8 +52,12 @@ const UserInfoForm = (props) => {
         value={userPreferedName}
         isRequire={false}
       />
-      <label>Profile Picture</label>
-      <input type="file" onChange={(e) => onProfilePicChange(e)} />
+      <InputLabel>Profile Picture: </InputLabel>
+      <Input
+        type="file"
+        variant="standard"
+        onChange={(e) => onProfilePicChange(e)}
+      />
       <FormField
         fieldName="SSN"
         type="text"
@@ -67,15 +72,17 @@ const UserInfoForm = (props) => {
         value={dob}
         isRequire={true}
       />
-      <label>Gender: </label>
-      <div className="form_field">
-        <select value={gender} onChange={(e) => onGenderChange(e)}>
-          <option value=""></option>
-          <option value="male">male</option>
-          <option value="female">female</option>
-          <option value="empty">I do not wish to answer</option>
-        </select>
-      </div>
+      <InputLabel>Gender</InputLabel>
+      <Select
+        variant="standard"
+        value={gender}
+        onChange={(e) => onGenderChange(e)}
+      >
+        <MenuItem value=""></MenuItem>
+        <MenuItem value="male">male</MenuItem>
+        <MenuItem value="female">female</MenuItem>
+        <MenuItem value="empty">I do not wish to answer</MenuItem>
+      </Select>
     </div>
   );
 };
