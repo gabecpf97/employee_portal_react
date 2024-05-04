@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Link from "@mui/material/Link";
 import Button from "@mui/material/Button";
+import { Typography } from "@mui/material";
 function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
@@ -19,15 +19,27 @@ function Home() {
   };
 
   return (
-    <div>
-      <h1>HR project</h1>
-      {isLoggedIn ? (
-        <Button onClick={handleLogout}>Logout</Button>
-      ) : (
-        <Link underline="none" href="/login">
-          Login
-        </Link>
-      )}
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "100vh",
+      }}
+    >
+      <Typography variant="h2">Welcome to our App.</Typography>
+      <div style={{ marginTop: "50px" }}>
+        {isLoggedIn ? (
+          <Button variant="contained" onClick={handleLogout}>
+            Logout
+          </Button>
+        ) : (
+          <Button variant="contained" onClick={() => navigate("/login")}>
+            Login
+          </Button>
+        )}
+      </div>
     </div>
   );
 }
