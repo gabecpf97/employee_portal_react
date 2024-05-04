@@ -44,6 +44,7 @@ function Login() {
         localStorage.setItem("isLoggedIn", true);
         localStorage.setItem("userId", data.userId);
         localStorage.setItem("userStatus", data.userStatus);
+        localStorage.setItem("housingId", data.housingId);
         if (data.userStatus === "approved") {
           navigate("/profile");
         }
