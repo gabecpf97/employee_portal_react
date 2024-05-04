@@ -111,7 +111,7 @@ const FacilityReports = () => {
     return (
         <Box m={3}>
             <Paper elevation={3} style={{ padding: '20px', marginBottom: '20px' }}>
-                <h4>Add a New Report</h4>
+                <h2>Add a New Report</h2>
                 <form onSubmit={handleSubmit}>
                     <TextField
                         label="Title"
@@ -135,7 +135,7 @@ const FacilityReports = () => {
                 </form>
             </Paper>
 
-            <h5>Facility Reports</h5>
+            <h1>Facility Reports</h1>
             {status === 'loading' && <div>Loading...</div>}
             {error && <div style={{ color: 'red' }}>Error: {error}</div>}
             <Box mt={2}>
@@ -151,7 +151,7 @@ const FacilityReports = () => {
                                     <div>{report.description}</div>
                                     <div>Status: {report.status}</div>
                                     <Box mt={2}>
-                                        <h6>Comments:</h6>
+                                        <h3>Comments:</h3>
                                         <Box
                                             ref={(el) => { commentsRefs.current[report._id] = el; }}
                                             maxHeight={200}

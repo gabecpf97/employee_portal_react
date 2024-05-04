@@ -42,7 +42,7 @@ const HousingSummary = () => {
                         </Grid>
                         <Grid item xs={12}>
                             <Typography variant="h5">Landlord Info</Typography>
-                            <p>{housingData.landlord.firstName} {housingData.landlord.lastName}</p>
+                            <p>Land Lord Name: {housingData.landlord.firstName} {housingData.landlord.lastName}</p>
                             <p>Email: {housingData.landlord.email}</p>
                             <p>Phone: {housingData.landlord.phone}</p>
                         </Grid>
