@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { Button } from "@mui/material";
 import FormField from "./FormField";
 
 const EmeContactForm = (props) => {
@@ -53,11 +54,14 @@ const EmeContactForm = (props) => {
         isRequire={false}
       />
       {i > 0 && (
-        <button type="button" onClick={() => onRemoveContact(i)}>
+        <Button
+          variant="contained"
+          type="button"
+          onClick={() => onRemoveContact(i)}
+        >
           Remove Contact
-        </button>
+        </Button>
       )}
-      <hr></hr>
     </div>
   );
 };

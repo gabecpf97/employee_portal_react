@@ -15,6 +15,7 @@ import FacilityReports from "./components/housing/facilityReports";
 //import Navbar from "./components/NavBar";
 import AppLayout from "./components/AppLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
+import "./App.css";
 
 const App = () => {
   //const isLoggedin = localStorage.getItem("authToken");

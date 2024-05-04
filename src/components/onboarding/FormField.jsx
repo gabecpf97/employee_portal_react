@@ -1,17 +1,17 @@
-import {} from "react";
+import { TextField } from "@mui/material";
 
 /* eslint-disable react/prop-types */
 const FormField = ({ fieldName, type, changeFn, value, isRequire }) => {
   return (
     <div className="form_field">
-      <label>{fieldName}</label>
-      {isRequire && <span>*: </span>}
-      <input
+      <TextField
+        variant="standard"
         type={type}
+        label={fieldName}
         onChange={(e) => changeFn(e)}
         value={value ? value : ""}
         required={isRequire}
-      ></input>
+      />
     </div>
   );
 };
