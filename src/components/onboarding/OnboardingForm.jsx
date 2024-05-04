@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Box, Button, Alert } from "@mui/material";
 import UserInfoForm from "./UserInfoForm";
 import AddressForm from "./AddressForm";
 import PhoneForm from "./PhoneForm";
@@ -126,6 +127,12 @@ const OnboardingForm = () => {
       setContacts(application.emergency);
     }
   }, [application]);
+
+  useEffect(() => {
+    document
+      .getElementById("onboarding_detail")
+      .scrollIntoView({ behavior: "smooth" });
+  }, [error]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -541,7 +548,11 @@ const OnboardingForm = () => {
       application.status !== "pending" &&
       application.status !== "approved"
     ) {
-      setRefPhone(e.target.value);
+      if (/^\d{0,10}$/.test(e.target.value)) {
+        setRefPhone(e.target.value);
+      } else {
+        setError("Please enter a 10 digit phone number only");
+      }
     }
   };
 
@@ -584,101 +595,110 @@ const OnboardingForm = () => {
   };
 
   return (
-    <form onSubmit={(e) => handleSubmit(e)}>
-      <h3>Onboarding Application</h3>
-      {error && <h4>{error}</h4>}
-      <UserInfoForm
-        onUserFirstNameChange={onUserFirstNameChange}
-        onUserLastNameChange={onUserLastNameChange}
-        onUserMiddleNameChange={onUserMiddleNameChange}
-        onUserPreferedNameChange={onUserPreferedNameChange}
-        onProfilePicChange={onProfilePicChange}
-        onSsnChange={onSsnChange}
-        onDobChange={onDobChange}
-        onGenderChange={onGenderChange}
-        userFirstName={userFirstName}
-        userLastName={userLastName}
-        userMiddleName={userMiddleName}
-        userPreferedName={userPreferedName}
-        ssn={ssn}
-        dob={dob}
-        gender={gender}
-      />
-      <AddressForm
-        onBuildingChange={onBuildingChange}
-        onStreetChange={onStreetChange}
-        onCityChange={onCityChange}
-        onStateChange={onStateChange}
-        onZipChange={onZipChange}
-        building={building}
-        street={street}
-        city={city}
-        state={state}
-        zip={zip}
-      />
-      <PhoneForm
-        onCellPhoneChange={onCellPhoneChange}
-        onWorkPhoneChange={onWorkPhoneChange}
-        cellphone={cellphone}
-        workphone={workphone}
-      />
-      <CarForm
-        onMakerChange={onMakerChange}
-        onModelChange={onModelChange}
-        onColorChange={onColorChange}
-        maker={maker}
-        model={model}
-        color={color}
-      />
-      <AuthForm
-        onCitiBoolChange={onCitiBoolChange}
-        onCitiTypeChange={onCitiTypeChange}
-        onFormTypeChange={onFormTypeChange}
-        onOPtReceiptChange={onOPtReceiptChange}
-        onOtherFormChange={onOtherFormChange}
-        onStartDateChange={onStartDateChange}
-        onEndDateChange={onEndDateChange}
-        onDriverBoolChange={onDriverBoolChange}
-        onDriverNumChange={onDriverNumChange}
-        onExpDateChagne={onExpDateChagne}
-        onDriverFileChange={onDriverFileChange}
-        citiBool={citiBool}
-        citiType={citiType}
-        formType={formType}
-        optReceipt={optReceipt}
-        otherForm={otherForm}
-        startDate={startDate}
-        endate={endDate}
-        driverBool={driverBool}
-        driverNum={driverNum}
-        expDate={expDate}
-      />
-      <ReferenceForm
-        onRefFnameChange={onRefFnameChange}
-        onRefLnameChange={onRefLnameChange}
-        onRefMnameChange={onRefMnameChange}
-        onRefPhoneChange={onRefPhoneChange}
-        onRefEmailChange={onRefEmailChange}
-        onRefrelChange={onRefrelChange}
-        refFname={refFname}
-        refLname={refLname}
-        refMname={refMname}
-        refPhone={refPhone}
-        refEmail={refEmail}
-        refRel={refRel}
-      />
-      <EmeContactsDiv
-        contacts={contacts}
-        onFieldChange={onContentChange}
-        onAddContact={onAddContact}
-        onRemoveContact={onRemoveContact}
-      />
-      {application &&
-        application.status !== "pending" &&
-        application.status !== "approved" && (
-          <button type="submit">Submit</button>
-        )}
-    </form>
+    <Box sx={{}}>
+      <form onSubmit={(e) => handleSubmit(e)}>
+        <h3>Onboarding Application</h3>
+        {error && <Alert severity="warning">{error}</Alert>}
+        <UserInfoForm
+          onUserFirstNameChange={onUserFirstNameChange}
+          onUserLastNameChange={onUserLastNameChange}
+          onUserMiddleNameChange={onUserMiddleNameChange}
+          onUserPreferedNameChange={onUserPreferedNameChange}
+          onProfilePicChange={onProfilePicChange}
+          onSsnChange={onSsnChange}
+          onDobChange={onDobChange}
+          onGenderChange={onGenderChange}
+          userFirstName={userFirstName}
+          userLastName={userLastName}
+          userMiddleName={userMiddleName}
+          userPreferedName={userPreferedName}
+          ssn={ssn}
+          dob={dob}
+          gender={gender}
+        />
+        <AddressForm
+          onBuildingChange={onBuildingChange}
+          onStreetChange={onStreetChange}
+          onCityChange={onCityChange}
+          onStateChange={onStateChange}
+          onZipChange={onZipChange}
+          building={building}
+          street={street}
+          city={city}
+          state={state}
+          zip={zip}
+        />
+        <PhoneForm
+          onCellPhoneChange={onCellPhoneChange}
+          onWorkPhoneChange={onWorkPhoneChange}
+          cellphone={cellphone}
+          workphone={workphone}
+        />
+        <CarForm
+          onMakerChange={onMakerChange}
+          onModelChange={onModelChange}
+          onColorChange={onColorChange}
+          maker={maker}
+          model={model}
+          color={color}
+        />
+        <AuthForm
+          onCitiBoolChange={onCitiBoolChange}
+          onCitiTypeChange={onCitiTypeChange}
+          onFormTypeChange={onFormTypeChange}
+          onOPtReceiptChange={onOPtReceiptChange}
+          onOtherFormChange={onOtherFormChange}
+          onStartDateChange={onStartDateChange}
+          onEndDateChange={onEndDateChange}
+          onDriverBoolChange={onDriverBoolChange}
+          onDriverNumChange={onDriverNumChange}
+          onExpDateChagne={onExpDateChagne}
+          onDriverFileChange={onDriverFileChange}
+          citiBool={citiBool}
+          citiType={citiType}
+          formType={formType}
+          optReceipt={optReceipt}
+          otherForm={otherForm}
+          startDate={startDate}
+          endate={endDate}
+          driverBool={driverBool}
+          driverNum={driverNum}
+          expDate={expDate}
+        />
+        <ReferenceForm
+          onRefFnameChange={onRefFnameChange}
+          onRefLnameChange={onRefLnameChange}
+          onRefMnameChange={onRefMnameChange}
+          onRefPhoneChange={onRefPhoneChange}
+          onRefEmailChange={onRefEmailChange}
+          onRefrelChange={onRefrelChange}
+          refFname={refFname}
+          refLname={refLname}
+          refMname={refMname}
+          refPhone={refPhone}
+          refEmail={refEmail}
+          refRel={refRel}
+        />
+        <EmeContactsDiv
+          contacts={contacts}
+          onFieldChange={onContentChange}
+          onAddContact={onAddContact}
+          onRemoveContact={onRemoveContact}
+        />
+        <Button
+          variant="contained"
+          color="secondary"
+          style={{ marginTop: "5px" }}
+          disabled={
+            application.status === "pending" &&
+            application.status === "approved"
+          }
+          type="submit"
+        >
+          Submit
+        </Button>
+      </form>
+    </Box>
   );
 };
 

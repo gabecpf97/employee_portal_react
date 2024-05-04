@@ -47,8 +47,9 @@ function Login() {
         localStorage.setItem("housingId", data.housingId);
         if (data.userStatus === "approved") {
           navigate("/");
+        } else {
+          navigate("/onboarding");
         }
-        navigate("/onboarding");
       } else {
         alert(data.message);
       }

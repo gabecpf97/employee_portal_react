@@ -1,4 +1,5 @@
 import FormField from "./FormField";
+import { Select, MenuItem, Input, InputLabel } from "@mui/material";
 
 /* eslint-disable react/prop-types */
 const AuthForm = (props) => {
@@ -28,19 +29,30 @@ const AuthForm = (props) => {
     <div className="work_authorization_field">
       <h3>Work Authorization</h3>
       <div className="form_field">
-        <label>Are you a citizen or permanent resident of the U.S?</label>
-        <select value={citiBool} onChange={(e) => onCitiBoolChange(e)}>
-          <option value="true">Yes</option>
-          <option value="false">No</option>
-        </select>
+        <InputLabel>
+          Are you a citizen or permanent resident of the U.S?
+        </InputLabel>
+        <Select
+          variant="standard"
+          value={citiBool}
+          onChange={(e) => onCitiBoolChange(e)}
+        >
+          <MenuItem value="true">Yes</MenuItem>
+          <MenuItem value="false">No</MenuItem>
+        </Select>
       </div>
       {citiBool === true && (
         <div className="citizen_yes">
           <div className="form_field">
-            <select value={citiType} onChange={(e) => onCitiTypeChange(e)}>
-              <option value="Green Card">Green Card</option>
-              <option value="Citizen">Citizen</option>
-            </select>
+            <InputLabel>Citizenship Type</InputLabel>
+            <Select
+              variant="standard"
+              value={citiType}
+              onChange={(e) => onCitiTypeChange(e)}
+            >
+              <MenuItem value="Green Card">Green Card</MenuItem>
+              <MenuItem value="Citizen">Citizen</MenuItem>
+            </Select>
           </div>
         </div>
       )}
@@ -48,19 +60,25 @@ const AuthForm = (props) => {
         <div className="citizen_no">
           <h3>What is your work authorization?</h3>
           <div className="form_field">
-            <select value={formType} onChange={(e) => onFormTypeChange(e)}>
-              <option value="H1-B">H1-B</option>
-              <option value="L2">L2</option>
-              <option value="F1(CPT/OPT)">F1(CPT/OPT)</option>
-              <option value="H4">H4</option>
-              <option value="other">other</option>
-            </select>
+            <InputLabel>Form Type</InputLabel>
+            <Select
+              variant="standard"
+              value={formType}
+              onChange={(e) => onFormTypeChange(e)}
+            >
+              <MenuItem value="H1-B">H1-B</MenuItem>
+              <MenuItem value="L2">L2</MenuItem>
+              <MenuItem value="F1(CPT/OPT)">F1(CPT/OPT)</MenuItem>
+              <MenuItem value="H4">H4</MenuItem>
+              <MenuItem value="other">other</MenuItem>
+            </Select>
           </div>
           {formType === "F1(CPT/OPT)" && (
             <>
-              <label>OPT Receipt</label>
-              <input
+              <InputLabel>OPT Receipt</InputLabel>
+              <Input
                 type="file"
+                variant="standard"
                 onChange={(e) => onOPtReceiptChange(e)}
                 required={formType === "F1(CPT/OPT)"}
               />
@@ -94,11 +112,15 @@ const AuthForm = (props) => {
       <div className="driver_licenece_field">
         <h3>Driver License</h3>
         <div className="form_field">
-          <label>Do you have a driver licenece</label>
-          <select onChange={(e) => onDriverBoolChange(e)}>
-            <option value="true">Yes</option>
-            <option value="false">No</option>
-          </select>
+          <InputLabel>Do you have a driver licenece</InputLabel>
+          <Select
+            value={driverBool}
+            variant="standard"
+            onChange={(e) => onDriverBoolChange(e)}
+          >
+            <MenuItem value="true">Yes</MenuItem>
+            <MenuItem value="false">No</MenuItem>
+          </Select>
         </div>
         {driverBool && (
           <>
@@ -116,8 +138,8 @@ const AuthForm = (props) => {
               value={expDate}
               isRequire={driverBool}
             />
-            <label>Driver License document</label>
-            <input
+            <Input
+              label="Driver License document"
               type="file"
               onChange={(e) => onDriverFileChange(e)}
               required={driverBool}
