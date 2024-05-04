@@ -69,7 +69,9 @@ function Login() {
         value={password}
         onChange={(e) => updatePassword(e.target.value)}
       />
-      <Button type="submit">Login</Button>
+      <Button variant="contained" type="submit">
+        Login
+      </Button>
     </form>
   );
 }
