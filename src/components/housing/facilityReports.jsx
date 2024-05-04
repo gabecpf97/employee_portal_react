@@ -1,7 +1,20 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Card, CardContent, CardHeader, TextField, Button, Box, Grid, Paper, Pagination } from '@mui/material';
+import { Card, CardContent, CardHeader, TextField, Button, Box, Grid, Paper, Pagination, Chip } from '@mui/material';
 import { fetchReports, addReport, addComment, updateComment } from '../../store/slices/facilityReports.slice.js';
+
+const getStatusChipProps = (status) => {
+    switch (status) {
+        case 'open':
+            return { label: status, style: { backgroundColor: '#f44336', color: '#fff' } }; // Red
+        case 'in progress':
+            return { label: status, style: { backgroundColor: '#ffeb3b', color: '#000' } }; // Yellow
+        case 'closed':
+            return { label: status, style: { backgroundColor: '#4caf50', color: '#fff' } }; // Green
+        default:
+            return { label: status, style: { backgroundColor: '#9e9e9e', color: '#fff' } }; // Default gray
+    }
+};
 
 const FacilityReports = () => {
     const [title, setTitle] = useState('');
@@ -148,8 +161,11 @@ const FacilityReports = () => {
                                     subheader={`Created by: ${report.createdBy}, Time: ${new Date(Number(report.timestamp)).toLocaleString()}`}
                                 />
                                 <CardContent>
-                                    <div>{report.description}</div>
-                                    <div>Status: {report.status}</div>
+                                    <div><h3>Description: {report.description}</h3></div>
+                                    {/* <div>Status: {report.status}</div> */}
+                                    <Box mt={1} mb={2}>
+                                        <Chip {...getStatusChipProps(report.status)} />
+                                    </Box>
                                     <Box mt={2}>
                                         <h3>Comments:</h3>
                                         <Box

@@ -11,7 +11,7 @@ export const fetchReports = createAsyncThunk(
                 Authorization: `Bearer ${token}`
             }
         });
-        return response.data.reports;
+        return response.data.reports.reverse();
     }
 )
 
