@@ -11,7 +11,7 @@ export const fetchReports = createAsyncThunk(
                 Authorization: `Bearer ${token}`
             }
         });
-        return response.data.reports;
+        return response.data.reports.reverse();
     }
 )
 
@@ -65,7 +65,56 @@ export const fetchComment = createAsyncThunk (
     }
 )
 
+export const updateComment = createAsyncThunk(
+    'facilityReports/updateComment', 
+    async ({ newComment, reportId, commentId }, thunkAPI) => {
+        const token = localStorage.getItem('authToken');
+        try {
+            const response = await axios.post(
+                'http://localhost:3000/housing/comments/updateComment',
+                {
+                    newComment: newComment,
+                    reportId: reportId,
+                    commentId: commentId
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+            return { reportId, commentId, updatedComment: response.data };
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data);
+        }
+    }
+);
 
+export const fetchUserDetails = createAsyncThunk(
+    'userDetails/fetchUserDetails',
+    async ({userId}, thunkAPI) => {
+        const token = localStorage.getItem('authToken');
+        // console.log("input id is correct?", userId);
+        try {
+            const response = await axios.post(
+                'http://localhost:3000/housing/reports/getUserInfo',
+                {
+                    userIdfront : userId,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+            // console.log(response.data.userInfo.username);
+            // return response.data.userInfo.username;
+            return { userId, details: response.data.userInfo.username };
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data);
+        }
+    }
+);
 
 const facilityReportsSlice = createSlice({
     name: 'facilityReports',
@@ -73,7 +122,9 @@ const facilityReportsSlice = createSlice({
         reports: [],
         // comments:{},
         status: 'idle',
-        error: null
+        error: null,
+        users:{},
+        loading: false,
     },
     reducers: {
         
@@ -94,21 +145,6 @@ const facilityReportsSlice = createSlice({
             .addCase(addReport.fulfilled, (state, action) => {
                 state.reports = [...state.reports, action.payload];
             })
-            // .addCase(addComment.fulfilled, (state, action) => {
-            //     // Assuming each report has an array of comments and each report is identified by reportId
-            //     const { reportId, comment } = action.payload;
-            //     const report = state.reports.find(r => r._id === reportId);
-            //     if (report) {
-            //         report.comments.push(comment);
-            //     }
-            //     state.status = 'succeeded';
-            //     // state.reports = state.reports.map(report =>
-            //     //     report._id === reportId
-            //     //         ? { ...report, comments: [...report.comments, comment] }
-            //     //         : report
-            //     // );
-            //     // state.status = 'succeeded';
-            // })
             .addCase(addComment.fulfilled, (state, action) => {
                 const { reportId, comment } = action.meta.arg; // Correct payload handling
                 const report = state.reports.find(r => r._id === reportId);
@@ -126,6 +162,30 @@ const facilityReportsSlice = createSlice({
             .addCase(fetchComment.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
+            })
+            .addCase(updateComment.fulfilled, (state, action) => {
+                const { reportId, commentId, updatedComment } = action.payload;
+                const report = state.reports.find(r => r._id === reportId);
+                if (report) {
+                    const commentIndex = report.comments.findIndex(c => c._id === commentId);
+                    if (commentIndex !== -1) {
+                        report.comments[commentIndex] = {...report.comments[commentIndex], ...updatedComment};
+                    }
+                }
+            })
+            .addCase(updateComment.rejected, (state, action) => {
+                state.error = action.error.message;
+            })
+            .addCase(fetchUserDetails.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(fetchUserDetails.fulfilled, (state, action) => {
+                const { userId, details } = action.payload;
+                state.users[userId] = details;  // Update the user details in state
+                state.status = 'done';
+            })
+            .addCase(fetchUserDetails.rejected, (state, action) => {
+                state.error = action.payload;  // Update the state with error information
             });
     }
 });
