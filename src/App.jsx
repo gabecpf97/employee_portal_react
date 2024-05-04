@@ -1,9 +1,9 @@
 import { Provider } from "react-redux";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import store from "./store/store";
 
 import RegistrationForm from "./components/registration/registrationForm";
-import Login from "./components/login";
+import Login from "./components/login/login";
 import Home from "./components/Home";
 import PageNotFound from "./components/PageNotFound";
 import Onboarding from "./components/onboarding/Onboarding";
@@ -13,6 +13,8 @@ import Profile from "./components/profile/profile";
 import HousingSummary from "./components/housing/housingSummary";
 import FacilityReports from "./components/housing/facilityReports";
 import Navbar from "./components/NavBar";
+import AppLayout from "./components/AppLayout";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
   const isLoggedin = localStorage.getItem("authToken");
@@ -21,34 +23,22 @@ const App = () => {
       <BrowserRouter>
         {isLoggedin && <Navbar />}
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/registration/:token" element={<RegistrationForm />} />
           <Route
-            path="/onboarding"
-            element={isLoggedin ? <Onboarding /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/login"
-            element={isLoggedin ? <Navigate to="/" /> : <Login />}
-          />
-          <Route
-            path="/profile"
-            element={isLoggedin ? <Profile /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/visa"
-            element={isLoggedin ? <Visa /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/housing/:housingId"
-            element={isLoggedin ? <HousingSummary /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/housing/reports"
             element={
-              isLoggedin ? <FacilityReports /> : <Navigate to="/login" />
+              <ProtectedRoute>
+                <AppLayout />
+              </ProtectedRoute>
             }
-          />
+          >
+            <Route path="/" element={<Home />} />
+            <Route path="/registration/:token" element={<RegistrationForm />} />
+            <Route path="/onboarding" element={<Onboarding />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/visa" element={<Visa />} />
+            <Route path="/housing/:housingId" element={<HousingSummary />} />
+            <Route path="/housing/reports" element={<FacilityReports />} />
+          </Route>
+          <Route path="/login" element={<Login />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>

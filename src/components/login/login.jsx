@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { setUsername, setUser } from "../store/slices/user.slice";
+import { setUsername, setUser } from "../../store/slices/user.slice";
 import { useNavigate } from "react-router-dom";
 // import Button from "@mui/material/Button";
-import { Input, Button } from "@mui/material";
+import { Input, Button, List, ListItem, Typography } from "@mui/material";
+import "./login.css";
 
 function Login() {
   const [username, updateUsername] = useState("");
@@ -52,27 +53,40 @@ function Login() {
       }
     } catch (error) {
       console.error("Error", error.message);
+      alert("Server is down, please try again later.");
     }
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>Username:</label>
-      <Input
-        type="text"
-        value={username}
-        onChange={(e) => updateUsername(e.target.value)}
-      />
-      <label>Password:</label>
-      <Input
-        type="text"
-        value={password}
-        onChange={(e) => updatePassword(e.target.value)}
-      />
-      <Button variant="contained" type="submit">
-        Login
-      </Button>
-    </form>
+    <List className="container" style={{ margin: "0 auto" }}>
+      <Typography variant="h5" style={{ margin: "0 70px" }}>
+        Log in to your account
+      </Typography>
+      <form onSubmit={handleSubmit}>
+        <ListItem>
+          <label>Username:</label>
+          <Input
+            type="text"
+            value={username}
+            onChange={(e) => updateUsername(e.target.value)}
+            required
+          />
+        </ListItem>
+        <ListItem>
+          <label>Password:</label>
+          <Input
+            type="text"
+            value={password}
+            onChange={(e) => updatePassword(e.target.value)}
+            required
+          />
+        </ListItem>
+
+        <Button variant="contained" type="submit">
+          Login
+        </Button>
+      </form>
+    </List>
   );
 }
 
