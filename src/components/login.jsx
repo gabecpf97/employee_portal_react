@@ -43,8 +43,9 @@ function Login() {
         localStorage.setItem("isLoggedIn", true);
         localStorage.setItem("userId", data.userId);
         localStorage.setItem("userStatus", data.userStatus);
-        localStorage.setItem("housingId", data.housingId);
-
+        if (data.userStatus === "approved") {
+          navigate("/");
+        }
         navigate("/onboarding");
       } else {
         alert(data.message);
@@ -68,7 +69,9 @@ function Login() {
         value={password}
         onChange={(e) => updatePassword(e.target.value)}
       />
-      <Button type="submit">Login</Button>
+      <Button variant="contained" type="submit">
+        Login
+      </Button>
     </form>
   );
 }

@@ -1,5 +1,5 @@
 import { Provider } from "react-redux";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import store from "./store/store";
 
 import RegistrationForm from "./components/registration/registrationForm";
@@ -15,19 +15,40 @@ import FacilityReports from "./components/housing/facilityReports";
 import Navbar from "./components/NavBar";
 
 const App = () => {
+  const isLoggedin = localStorage.getItem("authToken");
   return (
     <Provider store={store}>
       <BrowserRouter>
-        <Navbar />
+        {isLoggedin && <Navbar />}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/registration/:token" element={<RegistrationForm />} />
-          <Route path="/onboarding" element={<Onboarding />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/visa" element={<Visa />} />
-          <Route path="/housing/:housingId" element={<HousingSummary />} />
-          <Route path="/housing/reports" element={<FacilityReports />} />
+          <Route
+            path="/onboarding"
+            element={isLoggedin ? <Onboarding /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/login"
+            element={isLoggedin ? <Navigate to="/" /> : <Login />}
+          />
+          <Route
+            path="/profile"
+            element={isLoggedin ? <Profile /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/visa"
+            element={isLoggedin ? <Visa /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/housing/:housingId"
+            element={isLoggedin ? <HousingSummary /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/housing/reports"
+            element={
+              isLoggedin ? <FacilityReports /> : <Navigate to="/login" />
+            }
+          />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>

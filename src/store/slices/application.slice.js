@@ -14,26 +14,29 @@ export const fetchApplication = createAsyncThunk(
     });
     const data = await response.json();
     if (!response.ok) {
-      console.log("handle error in fetchApplication");
+      console.log("handle error in fetchApplication", data);
     } else {
-      return data.application;
+      if (data.application._id) {
+        return data.application;
+      }
+      return { status: "not start" };
     }
   }
 );
 
 const applicationAdapter = createEntityAdapter({
-  selectId: (application) => application._id,
+  selectId: () => "application",
 });
 
 const applicationSlice = createSlice({
   name: "application",
   initialState: applicationAdapter.getInitialState(),
   reducers: {
-    setApplication: applicationAdapter.setOne,
+    setApplication: applicationAdapter.upsertOne,
   },
   extraReducers: (builder) => {
     builder.addCase(fetchApplication.fulfilled, (state, action) => {
-      applicationAdapter.setOne(state, action.payload);
+      applicationAdapter.upsertOne(state, action.payload);
     });
   },
 });
