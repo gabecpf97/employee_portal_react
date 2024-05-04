@@ -6,6 +6,7 @@ import {
   fetchApplication,
   getApplication,
 } from "../../store/slices/application.slice";
+import OnboardingDisplay from "./OnboardingDisplay";
 
 const Onboarding = () => {
   const application = useSelector((state) =>
@@ -40,7 +41,12 @@ const Onboarding = () => {
           )}
         </>
       )}
-      <OnboardingForm />
+      {application &&
+        (application.status === "pending" ||
+          application.status === "approved") && <OnboardingDisplay />}
+      {application &&
+        (application.status === "rejected" ||
+          application.status === "not start") && <OnboardingForm />}
     </div>
   );
 };
