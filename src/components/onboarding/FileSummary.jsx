@@ -7,9 +7,12 @@ const FileSummary = () => {
   return (
     <div className="file_summary">
       <h3>Files uploaded: </h3>
-      <h4>Profile Picture: {application.picture}</h4>
-      <h4>Driver Licence: {application.driverLicense.document}</h4>
-      <h4>Work Authorization: {application.workAuthorization.document}</h4>
+      <h4>Profile Picture: </h4>
+      <img src={application.picture} />
+      <h4>Driver Licence: </h4>
+      <img src={application.driverLicense.document} />
+      <h4>Work Authorization: </h4>
+      <img src={application.workAuthorization.document} />
     </div>
   );
 };
