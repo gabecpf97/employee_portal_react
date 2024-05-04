@@ -77,7 +77,7 @@ function Login() {
         <ListItem>
           <label>Password:</label>
           <Input
-            type="text"
+            type="password"
             value={password}
             onChange={(e) => updatePassword(e.target.value)}
             required
