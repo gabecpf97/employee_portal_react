@@ -45,9 +45,11 @@ function Login() {
         localStorage.setItem("userId", data.userId);
         localStorage.setItem("userStatus", data.userStatus);
         if (data.userStatus === "approved") {
-          navigate("/");
+          navigate("/profile");
         }
-        navigate("/onboarding");
+        else{
+          navigate("/onboarding");
+        }
       } else {
         alert(data.message);
       }
