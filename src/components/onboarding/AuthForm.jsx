@@ -24,6 +24,7 @@ const AuthForm = (props) => {
     driverBool,
     driverNum,
     expDate,
+    status,
   } = props;
   return (
     <div className="work_authorization_field">
@@ -80,7 +81,9 @@ const AuthForm = (props) => {
                 type="file"
                 variant="standard"
                 onChange={(e) => onOPtReceiptChange(e)}
-                required={formType === "F1(CPT/OPT)"}
+                required={
+                  status === "rejected" ? false : formType === "F1(CPT/OPT)"
+                }
               />
             </>
           )}
@@ -142,7 +145,7 @@ const AuthForm = (props) => {
               label="Driver License document"
               type="file"
               onChange={(e) => onDriverFileChange(e)}
-              required={driverBool}
+              required={status === "rejected" ? false : driverBool}
             />
           </>
         )}

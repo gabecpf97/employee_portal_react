@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Box } from "@mui/material";
+import { Box, Alert } from "@mui/material";
 import OnboardingForm from "./OnboardingForm";
 import FileSummary from "./FileSummary";
 import { useDispatch, useSelector } from "react-redux";
@@ -40,7 +40,9 @@ const Onboarding = () => {
             <h2>Application status: {application.status}</h2>
             {application.status === "pending" && (
               <div className="application_pending">
-                <h3>Pending Please wait for HR to review your application.</h3>
+                <Alert security="info">
+                  Please wait for HR to review your application.
+                </Alert>
               </div>
             )}
             {application.status !== "not start" && (
@@ -48,7 +50,7 @@ const Onboarding = () => {
                 {application.status === "rejected" && (
                   <>
                     <h3>Feedback: </h3>
-                    <p>{application.feedback}</p>
+                    <Alert severity="info">{application.feedback}</Alert>
                   </>
                 )}
                 <FileSummary />

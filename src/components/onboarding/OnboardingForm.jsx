@@ -213,7 +213,6 @@ const OnboardingForm = () => {
         setError(data.message);
         window.scrollTo({ top: 0, behavior: "smooth" });
       } else {
-        console.log(data.application);
         dispatch(setApplication(data.application));
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
@@ -664,6 +663,7 @@ const OnboardingForm = () => {
           driverBool={driverBool}
           driverNum={driverNum}
           expDate={expDate}
+          status={application.status}
         />
         <ReferenceForm
           onRefFnameChange={onRefFnameChange}
