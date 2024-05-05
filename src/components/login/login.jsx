@@ -3,12 +3,20 @@ import { useDispatch } from "react-redux";
 import { setUsername, setUser } from "../../store/slices/user.slice";
 import { useNavigate } from "react-router-dom";
 // import Button from "@mui/material/Button";
-import { Input, Button, List, ListItem, Typography } from "@mui/material";
+import {
+  Input,
+  Button,
+  List,
+  ListItem,
+  Typography,
+  Alert,
+} from "@mui/material";
 import "./login.css";
 
 function Login() {
   const [username, updateUsername] = useState("");
   const [password, updatePassword] = useState("");
+  const [alert, updateAlert] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -46,18 +54,16 @@ function Login() {
         localStorage.setItem("userStatus", data.userStatus);
         localStorage.setItem("housingId", data.housingId);
         if (data.userStatus === "approved") {
-
           navigate("/profile");
-        }
-        else {
+        } else {
           navigate("/onboarding");
         }
       } else {
-        alert(data.message);
+        updateAlert(data.message);
       }
     } catch (error) {
       console.error("Error", error.message);
-      alert("Server is down, please try again later.");
+      updateAlert("Server is down, please try again later.");
     }
   }
 
@@ -66,6 +72,7 @@ function Login() {
       <Typography variant="h5" style={{ margin: "0 70px" }}>
         Log in to your account
       </Typography>
+      {alert ? <Alert severity="error">{alert}</Alert> : <></>}
       <form onSubmit={handleSubmit}>
         <ListItem>
           <label>Username:</label>
