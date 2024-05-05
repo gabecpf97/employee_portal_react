@@ -76,25 +76,61 @@ const Visa = () => {
             {visa.OPTReceipt.status !== "unuploaded" && (
               <>
                 <p>OPTReceipt document: </p>
-                <img src={visa.OPTReceipt.document} />
+                <Button
+                  component="a"
+                  variant="contained"
+                  rel="noopener"
+                  target="_blank"
+                  href={visa.OPTReceipt.document}
+                >
+                  Open document
+                </Button>
+                {/* <img src={visa.OPTReceipt.document} /> */}
               </>
             )}
             {visa.OPTEAD.status !== "unuploaded" && (
               <>
                 <p>OPTEAD document: </p>
-                <img src={visa.OPTEAD.document} />
+                <Button
+                  component="a"
+                  variant="contained"
+                  rel="noopener"
+                  target="_blank"
+                  href={visa.OPTEAD.document}
+                >
+                  Open document
+                </Button>
+                {/* <img src={visa.OPTEAD.document} /> */}
               </>
             )}{" "}
             {visa.I983.status !== "unuploaded" && (
               <>
-                <p>OPTReceipt document: </p>
-                <img src={visa.I983.document} />
+                <p>I983 document: </p>
+                <Button
+                  component="a"
+                  variant="contained"
+                  rel="noopener"
+                  target="_blank"
+                  href={visa.I983.document}
+                >
+                  Open document
+                </Button>
+                {/* <img src={visa.I983.document} /> */}
               </>
             )}
             {visa.I20.status !== "unuploaded" && (
               <>
-                <p>OPTReceipt document: </p>
-                <img src={visa.I20.document} />
+                <p>I20 document: </p>
+                <Button
+                  component="a"
+                  variant="contained"
+                  rel="noopener"
+                  target="_blank"
+                  href={visa.I20.document}
+                >
+                  Open document
+                </Button>
+                {/* <img src={visa.I20.document} /> */}
               </>
             )}
             {visa[visa.step].status === "unuploaded" && (

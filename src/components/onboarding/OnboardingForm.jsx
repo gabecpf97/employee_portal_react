@@ -183,8 +183,8 @@ const OnboardingForm = () => {
         emergency: contacts,
         feedback: "",
       };
-      newApplication.userId = user.userId;
-      newApplication.status = user.userStatus;
+      newApplication.userId = localStorage.getItem("userId");
+      newApplication.status = localStorage.getItem("userStatus");
       const formData = new FormData();
       for (const key in newApplication) {
         if (key === "emergency") {
@@ -201,6 +201,7 @@ const OnboardingForm = () => {
         url = `http://localhost:3000/application/update/${application._id}`;
         method = "PUT";
       }
+      console.log(newApplication);
       const response = await fetch(url, {
         method: method,
         body: formData,

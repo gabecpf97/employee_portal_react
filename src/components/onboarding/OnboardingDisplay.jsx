@@ -16,6 +16,9 @@ const OnboardingDisplay = () => {
       <p>
         picture: <img src={application.picture} />
       </p>
+      {/* <p>
+        picture: <img src={application.picture} />
+      </p> */}
       <p>SSN: {application.SSN}</p>
       <p>DOB: {application.DOB}</p>
       <p>gender: {application.gender}</p>
