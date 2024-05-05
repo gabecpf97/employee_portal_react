@@ -228,19 +228,19 @@ function Profile() {
     }));
   };
 
-  const handleWorkChange = (e) => {
-    const { name, value } = e.target;
-    setUserData((prevUserData) => ({
-      ...prevUserData,
-      application: {
-        ...prevUserData.application,
-        workAuthorization: {
-          ...prevUserData.application.workAuthorization,
-          [name]: value,
-        },
-      },
-    }));
-  };
+  //   const handleWorkChange = (e) => {
+  //     const { name, value } = e.target;
+  //     setUserData((prevUserData) => ({
+  //       ...prevUserData,
+  //       application: {
+  //         ...prevUserData.application,
+  //         workAuthorization: {
+  //           ...prevUserData.application.workAuthorization,
+  //           [name]: value,
+  //         },
+  //       },
+  //     }));
+  //   };
 
   const handleEmergencyChange = (e, t_index) => {
     const { name, value } = e.target;

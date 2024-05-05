@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import FormField from "./FormField";
-import { Select, MenuItem, Input, InputLabel } from "@mui/material";
+import { Select, MenuItem, Input, InputLabel, TextField } from "@mui/material";
 
 const UserInfoForm = (props) => {
   const {
@@ -65,12 +65,14 @@ const UserInfoForm = (props) => {
         value={ssn}
         isRequire={true}
       />
-      <FormField
-        fieldName="Date of Birth"
+      <InputLabel>Date of Birth</InputLabel>
+      <TextField
         type="Date"
-        changeFn={(e) => onDobChange(e)}
+        variant="standard"
+        onChange={(e) => onDobChange(e)}
         value={dob}
-        isRequire={true}
+        required={true}
+        inputProps={{ max: new Date().toISOString().split("T")[0] }}
       />
       <InputLabel>Gender</InputLabel>
       <Select

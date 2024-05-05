@@ -16,11 +16,35 @@ const FileSummary = () => {
       {toogle && (
         <>
           <h4>Profile Picture: </h4>
-          <img src={application.picture} />
+          <Button
+            component="a"
+            variant="contained"
+            rel="noopener"
+            target="_blank"
+            href={application.picture}
+          >
+            Open document
+          </Button>
           <h4>Driver Licence: </h4>
-          <img src={application.driverLicense.document} />
+          <Button
+            component="a"
+            variant="contained"
+            rel="noopener"
+            target="_blank"
+            href={application.driverLicense.document}
+          >
+            Open document
+          </Button>
           <h4>Work Authorization: </h4>
-          <img src={application.workAuthorization.document} />
+          <Button
+            component="a"
+            variant="contained"
+            rel="noopener"
+            target="_blank"
+            href={application.workAuthorization.document}
+          >
+            Open document
+          </Button>
         </>
       )}
     </div>

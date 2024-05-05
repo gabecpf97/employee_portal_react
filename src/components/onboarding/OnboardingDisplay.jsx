@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { getApplication } from "../../store/slices/application.slice";
+import { Box, Button } from "@mui/material";
 
 const OnboardingDisplay = () => {
   const application = useSelector((state) =>
@@ -36,17 +37,52 @@ const OnboardingDisplay = () => {
       <h4>Citizenship</h4>
       <p>citizenship: {application.citizenship}</p>
       <p>type: {application.workAuthorization.type}</p>
+      <p>document:</p>
+      <Button
+        component="a"
+        variant="contained"
+        rel="noopener"
+        target="_blank"
+        href={application.workAuthorization.document}
+      >
+        Open document
+      </Button>
       <p>
-        document: <img src={application.workAuthorization.document} />
+        startDate:{" "}
+        {
+          new Date(application.workAuthorization.startDate)
+            .toISOString()
+            .split("T")[0]
+        }
       </p>
-      <p>startDate: {application.workAuthorization.startDate}</p>
-      <p>endDate: {application.workAuthorization.endDate}</p>
+      <p>
+        endDate:{" "}
+        {
+          new Date(application.workAuthorization.endDate)
+            .toISOString()
+            .split("T")[0]
+        }
+      </p>
       <h4>Driver License</h4>
       <p>number: {application.driverLicense.number}</p>
-      <p>expirationDate: {application.driverLicense.expirationDate}</p>
       <p>
-        document: <img src={application.driverLicense.document} />
+        expirationDate:{" "}
+        {
+          new Date(application.driverLicense.expirationDate)
+            .toISOString()
+            .split("T")[0]
+        }
       </p>
+      <p>document:</p>
+      <Button
+        component="a"
+        variant="contained"
+        rel="noopener"
+        target="_blank"
+        href={application.driverLicense.document}
+      >
+        Open document
+      </Button>
       <h4>Reference</h4>
       <p>firstName: {application.reference.firstName}</p>
       <p>lastName: {application.reference.lastName}</p>
@@ -57,14 +93,22 @@ const OnboardingDisplay = () => {
       <h4>Emergency Contacts</h4>
       {application.emergency.map((contact, idx) => {
         return (
-          <div key={idx}>
+          <Box
+            sx={{
+              bgcolor: "#75cff4",
+              padding: "5px 10px",
+              borderRadius: "5px",
+              marginBottom: "10px",
+            }}
+            key={idx}
+          >
             <p>firstName: {contact.firstName}</p>
             <p>lastName: {contact.lastName}</p>
             <p>middleName: {contact.middleName}</p>
             <p>phone: {contact.phone}</p>
             <p>email: {contact.email}</p>
             <p>relationship: {contact.relationship}</p>
-          </div>
+          </Box>
         );
       })}
     </div>
