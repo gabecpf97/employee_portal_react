@@ -116,6 +116,30 @@ export const fetchUserDetails = createAsyncThunk(
     }
 );
 
+export const updateStatus = createAsyncThunk(
+    'userDetails/updateStatus',
+    async ({reportId, status}, thunkAPI) => {
+        const token = localStorage.getItem('authToken');
+        try {
+            const response = await axios.post(
+                'http://localhost:3000/housing/reports/updateStatus',
+                {
+                    reportId: reportId,
+                    newStatus: status
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+            return response.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data);
+        }
+    }
+)
+
 const facilityReportsSlice = createSlice({
     name: 'facilityReports',
     initialState: {
@@ -186,6 +210,22 @@ const facilityReportsSlice = createSlice({
             })
             .addCase(fetchUserDetails.rejected, (state, action) => {
                 state.error = action.payload;  // Update the state with error information
+            })
+            
+            .addCase(updateStatus.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(updateStatus.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                // Find the updated report and replace it
+                const index = state.reports.findIndex((report) => report._id === action.payload._id);
+                if (index !== -1) {
+                    state.reports[index] = action.payload;
+                }
+            })
+            .addCase(updateStatus.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.payload || 'Could not update status';
             });
     }
 });
