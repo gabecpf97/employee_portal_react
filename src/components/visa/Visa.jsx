@@ -5,12 +5,19 @@ import { Box, Input, InputLabel, Button } from "@mui/material";
 
 const Visa = () => {
   const dispatch = useDispatch();
-  const visa = useSelector(getVisa.selectAll)[0];
+  const visa = useSelector((state) => getVisa.selectById(state, "visa"));
   const [file, setFile] = useState("");
+  const [empty, setEmpty] = useState(false);
 
   useEffect(() => {
     dispatch(fetchVisa());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (visa && visa._id == 0) {
+      setEmpty(true);
+    }
+  }, [visa]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,7 +45,7 @@ const Visa = () => {
 
   return (
     <div className="visa">
-      {visa && (
+      {visa && !empty && (
         <Box
           sx={{
             display: "flex",
@@ -52,14 +59,14 @@ const Visa = () => {
         >
           <h2>Your current Visa status</h2>
           <h3>
-            {visa.step} Status: {visa[visa.step].status}
+            {visa.step} Status: {visa[visa.step]?.status}
           </h3>
           <>
-            {visa[visa.step].status === "rejected" && (
-              <h3>Feedback: {visa[visa.step].feedback}</h3>
+            {visa[visa.step]?.status === "rejected" && (
+              <h3>Feedback: {visa[visa.step]?.feedback}</h3>
             )}
-            {(visa[visa.step].status === "rejected" ||
-              visa[visa.step].status === "unuploaded") && (
+            {(visa[visa.step]?.status === "rejected" ||
+              visa[visa.step]?.status === "unuploaded") && (
               <form onSubmit={(e) => handleSubmit(e)}>
                 <InputLabel>File upload: </InputLabel>
                 <Input
@@ -73,7 +80,7 @@ const Visa = () => {
               </form>
             )}
             <h3>Your documents:</h3>
-            {visa.OPTReceipt.status !== "unuploaded" && (
+            {visa.OPTReceipt?.status !== "unuploaded" && (
               <>
                 <p>OPTReceipt document: </p>
                 <Button
@@ -81,14 +88,13 @@ const Visa = () => {
                   variant="contained"
                   rel="noopener"
                   target="_blank"
-                  href={visa.OPTReceipt.document}
+                  href={visa.OPTReceipt?.document}
                 >
                   Open document
                 </Button>
-                {/* <img src={visa.OPTReceipt.document} /> */}
               </>
             )}
-            {visa.OPTEAD.status !== "unuploaded" && (
+            {visa.OPTEAD?.status !== "unuploaded" && (
               <>
                 <p>OPTEAD document: </p>
                 <Button
@@ -96,14 +102,13 @@ const Visa = () => {
                   variant="contained"
                   rel="noopener"
                   target="_blank"
-                  href={visa.OPTEAD.document}
+                  href={visa.OPTEAD?.document}
                 >
                   Open document
                 </Button>
-                {/* <img src={visa.OPTEAD.document} /> */}
               </>
             )}{" "}
-            {visa.I983.status !== "unuploaded" && (
+            {visa.I983?.status !== "unuploaded" && (
               <>
                 <p>I983 document: </p>
                 <Button
@@ -111,14 +116,13 @@ const Visa = () => {
                   variant="contained"
                   rel="noopener"
                   target="_blank"
-                  href={visa.I983.document}
+                  href={visa.I983?.document}
                 >
                   Open document
                 </Button>
-                {/* <img src={visa.I983.document} /> */}
               </>
             )}
-            {visa.I20.status !== "unuploaded" && (
+            {visa.I20?.status !== "unuploaded" && (
               <>
                 <p>I20 document: </p>
                 <Button
@@ -126,17 +130,31 @@ const Visa = () => {
                   variant="contained"
                   rel="noopener"
                   target="_blank"
-                  href={visa.I20.document}
+                  href={visa.I20?.document}
                 >
                   Open document
                 </Button>
-                {/* <img src={visa.I20.document} /> */}
               </>
             )}
-            {visa[visa.step].status === "unuploaded" && (
+            {visa[visa.step]?.status === "unuploaded" && (
               <h4>Please upload your {visa.step} document</h4>
             )}
           </>
+        </Box>
+      )}
+      {visa && empty && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+            margin: "15px",
+            bgcolor: "#5da2e5",
+            padding: "10px",
+          }}
+        >
+          Not OPT Visa Work Authorization
         </Box>
       )}
     </div>

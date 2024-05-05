@@ -16,7 +16,6 @@ function Profile() {
   const [appEdit, setAppEdit] = useState(false);
   const [error, setError] = useState("");
 
-
   const token = localStorage.getItem("authToken");
   const userId = localStorage.getItem("userId");
   const userStatus = localStorage.getItem("userStatus");
@@ -85,7 +84,10 @@ function Profile() {
     } catch (error) {
       setError(error.response.data.message);
       window.scrollTo({ top: 0, behavior: "smooth" });
-      console.error("Error changing user profile:", error.response.data.message);
+      console.error(
+        "Error changing user profile:",
+        error.response.data.message
+      );
     }
   };
 
@@ -162,7 +164,7 @@ function Profile() {
       const errors = validateFormData(formData);
       if (errors) {
         window.scrollTo({ top: 0, behavior: "smooth" });
-        setError(errors)
+        setError(errors);
         return;
       }
 
@@ -189,14 +191,14 @@ function Profile() {
   const handleUserEditCancel = () => {
     if (window.confirm("Are you sure you want to discard all changes?")) {
       setUserData(originalData);
-      setError("")
+      setError("");
       setUserEdit(false);
     }
   };
   const handleAppEditCancel = () => {
     if (window.confirm("Are you sure you want to discard all changes?")) {
       setUserData(originalData);
-      setError("")
+      setError("");
       setAppEdit(false);
     }
   };
@@ -340,7 +342,7 @@ function Profile() {
           <div>
             <Typography variant="h6">Personal Information</Typography>
             {appEdit && error && <Alert severity="warning">{error}</Alert>}
-            <Box sx={{ display: "flex", gap: 1, mt: 2,mb:2, ml:2}}>
+            <Box sx={{ display: "flex", gap: 1, mt: 2, mb: 2, ml: 2 }}>
               <Button
                 variant="contained"
                 onClick={handleAppEdit}
@@ -563,40 +565,42 @@ function Profile() {
               />
             </Box>
 
-            <Box sx={{ padding: 2, border: '1px solid #ccc' }}>
-                            <Typography variant="subtitle1" gutterBottom>Employment</Typography>
-                            <TextField
-                                label="Visa Type"
-                                variant="outlined"
-                                fullWidth
-                                margin="normal"
-                                value={userData.application.workAuthorization.type}
-                                name="type"
-                                disabled
-                            />
-                            <TextField
-                                label="Start Date"
-                                type="text"
-                                variant="outlined"
-                                fullWidth
-                                margin="normal"
-                                InputLabelProps={{ shrink: true }}
-                                value={userData.application.workAuthorization.startDate}
-                                name="startDate"
-                                disabled
-                            />
-                            <TextField
-                                label="End Date"
-                                type="text"
-                                variant="outlined"
-                                fullWidth
-                                margin="normal"
-                                InputLabelProps={{ shrink: true }}
-                                value={userData.application.workAuthorization.endDate}
-                                name="endDate"
-                                disabled
-                            />
-                        </Box>
+            <Box sx={{ padding: 2, border: "1px solid #ccc" }}>
+              <Typography variant="subtitle1" gutterBottom>
+                Employment
+              </Typography>
+              <TextField
+                label="Visa Type"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                value={userData.application.workAuthorization.type}
+                name="type"
+                disabled
+              />
+              <TextField
+                label="Start Date"
+                type="text"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                InputLabelProps={{ shrink: true }}
+                value={userData.application.workAuthorization.startDate}
+                name="startDate"
+                disabled
+              />
+              <TextField
+                label="End Date"
+                type="text"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                InputLabelProps={{ shrink: true }}
+                value={userData.application.workAuthorization.endDate}
+                name="endDate"
+                disabled
+              />
+            </Box>
 
             <Box sx={{ padding: 2, border: "1px solid #ccc" }}>
               <Typography variant="subtitle1" gutterBottom>
@@ -719,9 +723,9 @@ function Profile() {
               <hr></hr>
               <br></br>
               <Typography variant="subtitle1">Work Authorization</Typography>
-              <p>{userData.application.workAuthorization.document}</p>
+              <p>{userData.application.workAuthorization?.document}</p>
               <a
-                href={userData.application.workAuthorization.document}
+                href={userData.application.workAuthorization?.document}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ textDecoration: "none" }}
@@ -735,7 +739,8 @@ function Profile() {
                 </Button>
               </a>
               <a
-                href={userData.application.workAuthorization.document}
+                href={userData.application.workAuthorization?.document}
+                download
                 style={{ textDecoration: "none" }}
                 target="_blank"
               >
