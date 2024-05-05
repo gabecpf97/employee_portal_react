@@ -36,13 +36,17 @@ const visaAdapter = createEntityAdapter({ selectId: (visa) => visa._id });
 const visaSlice = createSlice({
   name: "visa",
   initialState: visaAdapter.getInitialState(),
-  reducers: {},
+  reducers: {
+    setVisa: visaAdapter.setOne,
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchVisa.fulfilled, (state, action) => {
       visaAdapter.setOne(state, action.payload);
     });
   },
 });
+
+export const { setVisa } = visaSlice.actions;
 
 export const getVisa = visaAdapter.getSelectors((state) => state.visa);
 

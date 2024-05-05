@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchVisa, getVisa } from "../../store/slices/visa.slice";
+import { fetchVisa, getVisa, setVisa } from "../../store/slices/visa.slice";
+import { Box, Input, InputLabel, Button } from "@mui/material";
 
 const Visa = () => {
   const dispatch = useDispatch();
@@ -26,49 +27,81 @@ const Visa = () => {
       });
       const data = await resposne.json();
       if (!resposne.ok) {
-        console.log("handle error putting file in visa");
+        console.log("handle error putting file in visa", data);
       } else {
-        console.log(data);
+        dispatch(setVisa(data.visa));
       }
     } catch (err) {
-      console.log("handle error in updating with file");
+      console.log("handle error in updating with file", err);
     }
   };
 
   return (
     <div className="visa">
       {visa && (
-        <>
-          <h2>
-            your current status for {visa.step}: {visa[visa.step].status}
-          </h2>
-          {visa[visa.step].status === "rejected" && (
-            <h3>Feedback: {visa[visa.step].feedback}</h3>
-          )}
-          <h3>Your documents:</h3>
-          {visa.OPTReceipt.status !== "unuploaded" && (
-            <img src={visa.OPTReceipt.document} />
-          )}
-          {visa.OPTEAD.status !== "unuploaded" && (
-            <img src={visa.OPTEAD.document} />
-          )}{" "}
-          {visa.I983.status !== "unuploaded" && (
-            <img src={visa.I983.document} />
-          )}
-          {visa.I20.status !== "unuploaded" && <img src={visa.I20.document} />}
-          {visa[visa.step].status === "unuploaded" && (
-            <h4>Please upload your {visa.step} document</h4>
-          )}
-          {visa[visa.step].status === "rejected" && (
-            <form onSubmit={(e) => handleSubmit(e)}>
-              <input
-                type="file"
-                onChange={(e) => setFile(e.target.files[0])}
-              ></input>
-              <button type="submit">Submit</button>
-            </form>
-          )}
-        </>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+            margin: "15px",
+            bgcolor: "#5da2e5",
+            padding: "10px",
+          }}
+        >
+          <h2>Your current Visa status</h2>
+          <h3>
+            {visa.step} Status: {visa[visa.step].status}
+          </h3>
+          <>
+            {visa[visa.step].status === "rejected" && (
+              <h3>Feedback: {visa[visa.step].feedback}</h3>
+            )}
+            {(visa[visa.step].status === "rejected" ||
+              visa[visa.step].status === "unuploaded") && (
+              <form onSubmit={(e) => handleSubmit(e)}>
+                <InputLabel>File upload: </InputLabel>
+                <Input
+                  type="file"
+                  variant="standard"
+                  onChange={(e) => setFile(e.target.files[0])}
+                ></Input>
+                <Button size="small" variant="contained" type="submit">
+                  Submit
+                </Button>
+              </form>
+            )}
+            <h3>Your documents:</h3>
+            {visa.OPTReceipt.status !== "unuploaded" && (
+              <>
+                <p>OPTReceipt document: </p>
+                <img src={visa.OPTReceipt.document} />
+              </>
+            )}
+            {visa.OPTEAD.status !== "unuploaded" && (
+              <>
+                <p>OPTEAD document: </p>
+                <img src={visa.OPTEAD.document} />
+              </>
+            )}{" "}
+            {visa.I983.status !== "unuploaded" && (
+              <>
+                <p>OPTReceipt document: </p>
+                <img src={visa.I983.document} />
+              </>
+            )}
+            {visa.I20.status !== "unuploaded" && (
+              <>
+                <p>OPTReceipt document: </p>
+                <img src={visa.I20.document} />
+              </>
+            )}
+            {visa[visa.step].status === "unuploaded" && (
+              <h4>Please upload your {visa.step} document</h4>
+            )}
+          </>
+        </Box>
       )}
     </div>
   );
