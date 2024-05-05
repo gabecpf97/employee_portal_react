@@ -7,6 +7,7 @@ const HousingSummary = () => {
     const dispatch = useDispatch();
     const housingIdLocalStorage = window.localStorage.getItem('housingId');
     const housingData = useSelector(state => state.housing.housingInfo.houseInfo);
+    const residentsData = useSelector(state => state.housing.housingInfo.residents);
     const status = useSelector(state => state.housing.status);
     const error = useSelector(state => state.housing.error);
 
@@ -23,6 +24,8 @@ const HousingSummary = () => {
     if (status === 'failed') {
         return <Typography color="error">Error: {error}</Typography>;
     }
+
+    console.log(residentsData)
 
     return (
         <Box
@@ -56,10 +59,18 @@ const HousingSummary = () => {
                         <Grid item xs={12}>
                             <Typography variant="h5">Roommates</Typography>
                             <ul>
-                                {housingData.residentIds.map((resident, index) => (
+                                {/* {residentsData.map((resident, index) => (
                                     <li key={`${resident._id}-${index}`}>{resident.username}</li>
 
-                                ))}
+                                ))} */}
+                                {residentsData && typeof residentsData === 'object' && 
+                                    Object.entries(residentsData).map(([residentId, resident], index) => (
+                                        <li key={`${residentId}-${index}`}>
+                                            <p>Name: {resident.firstName} {resident.lastName}</p>
+                                            <p>Phone Number: {resident.cellPhone}</p>
+                                            </li>
+                                    ))
+                                }
                             </ul>
                         </Grid>
                     </Grid>

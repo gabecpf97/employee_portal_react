@@ -53,10 +53,7 @@ const FacilityReports = () => {
         }
 
         try {
-
-            
             await dispatch(addReport({ title, description })).unwrap();
-            
             await dispatch(fetchReports());
             setTitle('');
             setDescription('');
@@ -191,8 +188,9 @@ const FacilityReports = () => {
             {error && <div style={{ color: 'red' }}>Error: {error}</div>}
             <Box mt={2}>
                 <Grid container spacing={3} alignItems="stretch">
-                    {paginatedReports.map((report, reportIndex) => (
-                        <Grid item xs={12} md={4} key={report._id}>
+                    {paginatedReports.length > 0 ? paginatedReports.map((report, reportIndex) => (
+                        report && (
+                            <Grid item xs={12} md={4} key={report._id}>
                             <Card elevation={3} style={{ height: '100%' }}>
                                 <CardHeader
                                     title={report.title || 'Untitled Report'}
@@ -251,7 +249,8 @@ const FacilityReports = () => {
                                                         <span>{comment.createdBy?.username ?? 'Unknown User'}</span>
                                                         <>Time: {new Date(Number(comment.timestamp)).toLocaleString()}</>
                                                         {comment.createdBy?._id === currentUserId && (
-                                                            <Button variant="outlined" onClick={() => toggleEditMode(comment._id)}>
+                                                            <Button variant="outlined" onClick={() => toggleEditMode(comment._id)}
+                                                            disabled={report.status === 'closed'}>
                                                                 {editingCommentId === comment._id ? 'Cancel' : 'Edit'}
                                                             </Button>
                                                         )}
@@ -274,12 +273,21 @@ const FacilityReports = () => {
                                             value={commentTexts[`${report._id}-${reportIndex}`] || ''}
                                             onChange={(e) => handleCommentChange(report._id, reportIndex, e.target.value)}
                                         />
-                                        <Button onClick={() => handleAddComment(report, reportIndex)} variant="contained" color="primary">Add Comment</Button>
+                                        <Button 
+                                            onClick={() => handleAddComment(report, reportIndex)} 
+                                            variant="contained" 
+                                            color="primary"
+                                            disabled={report.status === 'closed'}
+                                            >Add Comment</Button>
                                     </Box>
                                 </CardContent>
                             </Card>
                         </Grid>
-                    ))}
+                        )
+                    )) : (
+                        <div><h1>No reports available</h1></div>
+                    )}
+                    
                 </Grid>
                 <Box mt={2} display="flex" justifyContent="center">
                     <Pagination count={Math.ceil(reports.length / itemsPerPage)} page={currentPage} onChange={handlePageChange} />

@@ -4,7 +4,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setUsername, setPassword, setEmail } from "../../store/slices/user.slice";
 import { useNavigate } from "react-router-dom"
-import { List, ListItem, Typography, Input, Button, Box } from '@mui/material';
+import { List, ListItem, Typography, Input, Button, Box, Alert } from '@mui/material';
 
 
 // function to sanitize the input fields
@@ -29,6 +29,7 @@ function RegistrationForm() {
     const navigate = useNavigate();
     // const location = useLocation();
     const [isValid, setIsValid] = useState(null);
+    const [errorF, setErrorF] = useState("");
 
     //check if link is valid
     useEffect(() => {
@@ -39,6 +40,7 @@ function RegistrationForm() {
                 setIsValid(response.status === 200);
             } catch (error) {
                 console.error("Registration validation failed:", error);
+                setErrorF(error);
                 setIsValid(false);
             }
         }
@@ -88,10 +90,12 @@ function RegistrationForm() {
             navigate('/login')
         } else {
             console.log("Failed to register:", response);
+            setErrorF("Failed to register:", response);
         }
         } catch (error) {
         console.error("Error submitting form:", error.response.data.message);
-        alert(error.response.data.message);
+        setErrorF(error.response.data.message);
+        // alert(error.response.data.message);
         }
     };
     // console.log(isValid);
@@ -105,6 +109,7 @@ function RegistrationForm() {
             <Typography variant="h5" style={{ margin: "0 70px" }}>
                 Register for an Account
             </Typography>
+            {errorF && <Alert severity="warning">{errorF}</Alert>}
             <form onSubmit={handleSubmit}>
                 <ListItem>
                     <label htmlFor="username">Username:</label>
