@@ -42,7 +42,7 @@ function Profile() {
           setUserData(response.data);
           setOriginalData(response.data);
         } catch (error) {
-          console.error("Error fetching user data:", error);
+          console.error("Error fetching user data:", error.data.message);
         }
       };
       fetchData();
@@ -83,10 +83,10 @@ function Profile() {
       console.log(response.data);
       location.reload();
     } catch (error) {
-      console.error("Error changing user profile:", error);
-      setUserData(originalData);
+      setError(error.response.data.message);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      console.error("Error changing user profile:", error.response.data.message);
     }
-    setUserEdit(false);
   };
 
   const handleAppEditSave = async () => {
@@ -161,6 +161,7 @@ function Profile() {
       // }
       const errors = validateFormData(formData);
       if (errors) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
         setError(errors)
         return;
       }
@@ -177,7 +178,8 @@ function Profile() {
       console.log(response.data);
       location.reload();
     } catch (error) {
-      alert(`Error: ${error.response.status} - ${error.response.data.message}`);
+      setError(error.response.data.message);
+      window.scrollTo({ top: 0, behavior: "smooth" });
       console.error("Error changing user profile:", error.response.data);
       //setUserData(originalData);
     }
@@ -694,6 +696,7 @@ function Profile() {
                 href={userData.application.driverLicense.document}
                 download="downloaded_filename.png"
                 style={{ textDecoration: "none" }}
+                target="_blank"
               >
                 <Button variant="contained" color="primary">
                   Download
@@ -733,8 +736,8 @@ function Profile() {
               </a>
               <a
                 href={userData.application.workAuthorization.document}
-                download="downloaded_filename.png"
                 style={{ textDecoration: "none" }}
+                target="_blank"
               >
                 <Button variant="contained" color="primary">
                   Download
