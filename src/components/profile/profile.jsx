@@ -124,16 +124,16 @@ function Profile() {
       formData.append("citizenship", userData.application.citizenship);
       formData.append(
         "workAuthorization_type",
-        userData.application.workAuthorization.type
+        userData.application.workAuthorization?.type
       );
       formData.append("workAuthorization_document", file_work);
       formData.append(
         "workAuthorization_startDate",
-        userData.application.workAuthorization.startDate
+        userData.application.workAuthorization?.startDate
       );
       formData.append(
         "workAuthorization_endDate",
-        userData.application.workAuthorization.endDate
+        userData.application.workAuthorization?.endDate
       );
       formData.append(
         "driverLicense_number",
@@ -574,7 +574,7 @@ function Profile() {
                 variant="outlined"
                 fullWidth
                 margin="normal"
-                value={userData.application.workAuthorization.type}
+                value={userData.application.workAuthorization?.type}
                 name="type"
                 disabled
               />
@@ -585,7 +585,7 @@ function Profile() {
                 fullWidth
                 margin="normal"
                 InputLabelProps={{ shrink: true }}
-                value={userData.application.workAuthorization.startDate}
+                value={userData.application.workAuthorization?.startDate}
                 name="startDate"
                 disabled
               />
@@ -596,7 +596,7 @@ function Profile() {
                 fullWidth
                 margin="normal"
                 InputLabelProps={{ shrink: true }}
-                value={userData.application.workAuthorization.endDate}
+                value={userData.application.workAuthorization?.endDate}
                 name="endDate"
                 disabled
               />
