@@ -57,7 +57,8 @@ const HousingSummary = () => {
                             <Typography variant="h5">Roommates</Typography>
                             <ul>
                                 {housingData.residentIds.map((resident, index) => (
-                                    <li key={`${resident}-${index}`}>{resident}</li>
+                                    <li key={`${resident._id}-${index}`}>{resident.username}</li>
+
                                 ))}
                             </ul>
                         </Grid>
