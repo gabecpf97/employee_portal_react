@@ -1,25 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Card, 
-    CardContent, 
-    CardHeader, 
-    TextField, 
-    Button, 
-    Box, 
-    Grid, 
-    Paper, 
-    Pagination, 
-    Chip, 
-    Select, 
-    MenuItem, 
-    InputLabel, 
-    FormControl } from '@mui/material';
-import { fetchReports, 
-    addReport, 
-    addComment, 
-    updateComment,
-    updateStatus, } from '../../store/slices/facilityReports.slice.js';
+import {
+    Card, CardContent, CardHeader, TextField, Button, Box, Grid, Paper, Pagination, Chip, Select, MenuItem, InputLabel, FormControl
+} from '@mui/material';
+import {
+    fetchReports, addReport, addComment, updateComment, updateStatus
+} from '../../store/slices/facilityReports.slice.js';
 
+// Utility function to get status chip properties based on the current status
 const getStatusChipProps = (status) => {
     switch (status) {
         case 'open':
@@ -33,6 +21,7 @@ const getStatusChipProps = (status) => {
     }
 };
 
+// Main functional component for managing facility reports
 const FacilityReports = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -48,13 +37,14 @@ const FacilityReports = () => {
     const status = useSelector(state => state.facilityReports.status);
     const error = useSelector(state => state.facilityReports.error);
     const currentUserId = window.localStorage.getItem('userId');
-
     const commentsRefs = useRef({});
 
+    // Fetch the facility reports when the component is mounted
     useEffect(() => {
         dispatch(fetchReports());
     }, [dispatch]);
 
+    // Handles report submission
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (title.trim() === '' || description.trim() === '') {
@@ -63,98 +53,104 @@ const FacilityReports = () => {
         }
 
         try {
+
+            
             await dispatch(addReport({ title, description })).unwrap();
+            
+            await dispatch(fetchReports());
             setTitle('');
             setDescription('');
-            dispatch(fetchReports());
         } catch (error) {
             console.error('Failed to add report:', error);
             alert('Failed to add report: ' + error.message);
         }
     };
 
+    // Handle changes in comment input
     const handleCommentChange = (reportId, index, text) => {
-        const newCommentTexts = { ...commentTexts, [`${reportId}-${index}`]: text };
-        setCommentTexts(newCommentTexts);
+        setCommentTexts({ ...commentTexts, [`${reportId}-${index}`]: text });
     };
 
+    // Add a new comment
     const handleAddComment = async (report, index) => {
         const commentText = commentTexts[`${report._id}-${index}`];
-        if (!report || !report._id || !commentText || commentText.trim() === '') {
-            alert('Invalid report or comment text.');
+        if (!commentText || commentText.trim() === '') {
+            alert('Comment text cannot be empty.');
             return;
         }
 
         try {
             await dispatch(addComment({ reportId: report._id, comment: commentText })).unwrap();
-            dispatch(fetchReports());
             setCommentTexts(prev => ({ ...prev, [`${report._id}-${index}`]: '' }));
+            await dispatch(fetchReports());
         } catch (error) {
             console.error('Failed to add comment:', error);
             alert('Failed to add comment: ' + error.message);
         }
     };
 
+    // Update an existing comment
     const handleUpdateComment = async (reportId, commentId) => {
         const updatedComment = updatedCommentTexts[commentId];
-        if (!reportId || !commentId || !updatedComment || updatedComment.trim() === '') {
+        if (!updatedComment || updatedComment.trim() === '') {
             alert('Invalid report or comment.');
             return;
         }
 
         try {
-            await dispatch(updateComment({
-                newComment: updatedComment,
-                reportId: reportId,
-                commentId: commentId
-            })).unwrap();
-            dispatch(fetchReports());
+            await dispatch(updateComment({ newComment: updatedComment, reportId, commentId })).unwrap();
             setEditingCommentId(null);
             setUpdatedCommentTexts(prev => ({ ...prev, [commentId]: '' }));
+            await dispatch(fetchReports());
         } catch (error) {
             console.error('Failed to update comment:', error);
             alert('Failed to update comment: ' + error.message);
         }
     };
 
-    const toggleEditMode = (commentId) => {
-        setEditingCommentId(prev => (prev === commentId ? null : commentId));
-    };
+    // Toggle edit mode for a specific comment
+    const toggleEditMode = (commentId) => setEditingCommentId(prev => (prev === commentId ? null : commentId));
 
+    // Scroll to the bottom of the comments section
     const scrollToBottom = (reportId) => {
         if (commentsRefs.current[reportId]) {
             commentsRefs.current[reportId].scrollTop = commentsRefs.current[reportId].scrollHeight;
         }
     };
 
+    // Scroll to the bottom whenever the reports change
+    // useEffect(() => {
+    //     reports.forEach(report => report._id && scrollToBottom(report._id));
+    // }, [reports]);
+
     useEffect(() => {
-        reports.forEach(report => {
-            if (report && report._id) {
-                scrollToBottom(report._id);
-            }
-        });
+        reports
+            .filter(report => report && typeof report === 'object' && '_id' in report)
+            .forEach(report => scrollToBottom(report._id));
     }, [reports]);
 
-    const handlePageChange = (event, page) => setCurrentPage(page);
+    // Handle page change for pagination
+    const handlePageChange = (_, page) => setCurrentPage(page);
 
+    // Paginate the reports
     const paginatedReports = reports.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
+    // Handle changes in status
     const handleStatusChange = (reportId, value) => {
-        setNewStatus((prev) => ({
-            ...prev,
-            [reportId]: value
-        }));
+        setNewStatus((prev) => ({ ...prev, [reportId]: value }));
     };
 
+    // Update the status of a report
     const handleUpdateStatus = async (reportId) => {
         const statusToUpdate = newStatus[reportId];
         if (!statusToUpdate) {
             alert('Please select a valid status.');
             return;
         }
+
         try {
             await dispatch(updateStatus({ reportId, status: statusToUpdate })).unwrap();
-            dispatch(fetchReports());
+            await dispatch(fetchReports());
         } catch (error) {
             console.error('Failed to update status:', error);
             alert('Failed to update status: ' + error.message);
@@ -163,6 +159,7 @@ const FacilityReports = () => {
 
     return (
         <Box m={3}>
+            {/* Report Submission Form */}
             <Paper elevation={3} style={{ padding: '20px', marginBottom: '20px' }}>
                 <h2>Add a New Report</h2>
                 <form onSubmit={handleSubmit}>
@@ -170,7 +167,7 @@ const FacilityReports = () => {
                         label="Title"
                         fullWidth
                         value={title}
-                        onChange={e => setTitle(e.target.value)}
+                        onChange={(e) => setTitle(e.target.value)}
                         required
                         margin="normal"
                     />
@@ -180,7 +177,7 @@ const FacilityReports = () => {
                         multiline
                         rows={4}
                         value={description}
-                        onChange={e => setDescription(e.target.value)}
+                        onChange={(e) => setDescription(e.target.value)}
                         required
                         margin="normal"
                     />
@@ -188,36 +185,36 @@ const FacilityReports = () => {
                 </form>
             </Paper>
 
+            {/* Facility Reports Section */}
             <h1>Facility Reports</h1>
             {status === 'loading' && <div>Loading...</div>}
             {error && <div style={{ color: 'red' }}>Error: {error}</div>}
             <Box mt={2}>
                 <Grid container spacing={3} alignItems="stretch">
-                    {paginatedReports.filter(report => report && report._id).map((report, reportIndex) => (
+                    {paginatedReports.map((report, reportIndex) => (
                         <Grid item xs={12} md={4} key={report._id}>
                             <Card elevation={3} style={{ height: '100%' }}>
                                 <CardHeader
-                                    title={report.title}
-                                    subheader={`Created by: ${report.createdBy}, Time: ${new Date(Number(report.timestamp)).toLocaleString()}`}
+                                    title={report.title || 'Untitled Report'}
+                                    subheader={`Created by: ${report.createdBy?.username ?? 'Unknown'}, Time: ${new Date(Number(report.timestamp)).toLocaleString()}`}
                                 />
                                 <CardContent>
                                     <div><h3>Description: {report.description}</h3></div>
                                     <FormControl fullWidth margin="normal">
-                                            <InputLabel><h2>Status: </h2></InputLabel>
-                                            <br></br>
-                                            <br></br>
-                                            <Box mt={1} mb={2}>
-                                                <Chip {...getStatusChipProps(report.status)} />
-                                            </Box>
-                                            
-                                            <Select
-                                                value={newStatus[report._id] || report.status}
-                                                onChange={(e) => handleStatusChange(report._id, e.target.value)}
-                                            >
-                                                <MenuItem value="open">Open</MenuItem>
-                                                <MenuItem value="in progress">In Progress</MenuItem>
-                                                <MenuItem value="closed">Closed</MenuItem>
-                                            </Select>
+                                        <InputLabel><h2>Status:</h2></InputLabel>
+                                        <br></br><br></br>
+                                        <Box mt={1} mb={2}>
+                                            <Chip {...getStatusChipProps(report.status)} />
+                                        </Box>
+
+                                        <Select
+                                            value={newStatus[report._id] || report.status}
+                                            onChange={(e) => handleStatusChange(report._id, e.target.value)}
+                                        >
+                                            <MenuItem value="open">Open</MenuItem>
+                                            <MenuItem value="in progress">In Progress</MenuItem>
+                                            <MenuItem value="closed">Closed</MenuItem>
+                                        </Select>
                                     </FormControl>
                                     <Button
                                         variant="contained"
@@ -236,34 +233,39 @@ const FacilityReports = () => {
                                             p={1}
                                             mb={2}
                                         >
-                                            {report.comments.map((comment) => (
-                                                <Box key={`${report._id}-${comment._id}`} mb={2}>
-                                                    <span>
-                                                        Message: {editingCommentId === comment._id ? (
-                                                            <TextField
-                                                                value={updatedCommentTexts[comment._id] || comment.description}
-                                                                onChange={(e) => setUpdatedCommentTexts({ ...updatedCommentTexts, [comment._id]: e.target.value })}
-                                                                multiline
-                                                                rows={2}
-                                                                fullWidth
-                                                            />
-                                                        ) : comment.description}
-                                                    </span>
-                                                    <br></br>
-                                                    <span>Created by: {comment.createdBy} </span>
-                                                    <>Time: {new Date(Number(comment.timestamp)).toLocaleString()}</>
-                                                    {comment.createdBy === currentUserId && (
-                                                        <Button variant="outlined" onClick={() => toggleEditMode(comment._id)}>
-                                                            {editingCommentId === comment._id ? 'Cancel' : 'Edit'}
-                                                        </Button>
-                                                    )}
-                                                    {editingCommentId === comment._id && (
-                                                        <Button onClick={() => handleUpdateComment(report._id, comment._id)}>Submit Edit</Button>
-                                                    )}
-                                                </Box>
-                                            ))}
+                                            {report.comments.length > 0 ? (
+                                                report.comments.map((comment) => (
+                                                    <Box key={`${report._id}-${comment._id}`} mb={2}>
+                                                        <span>
+                                                            Message: {editingCommentId === comment._id ? (
+                                                                <TextField
+                                                                    value={updatedCommentTexts[comment._id] || comment.description}
+                                                                    onChange={(e) => setUpdatedCommentTexts({ ...updatedCommentTexts, [comment._id]: e.target.value })}
+                                                                    multiline
+                                                                    rows={2}
+                                                                    fullWidth
+                                                                />
+                                                            ) : comment.description}
+                                                        </span>
+                                                        <br/>
+                                                        <span>{comment.createdBy?.username ?? 'Unknown User'}</span>
+                                                        <>Time: {new Date(Number(comment.timestamp)).toLocaleString()}</>
+                                                        {comment.createdBy?._id === currentUserId && (
+                                                            <Button variant="outlined" onClick={() => toggleEditMode(comment._id)}>
+                                                                {editingCommentId === comment._id ? 'Cancel' : 'Edit'}
+                                                            </Button>
+                                                        )}
+                                                        {editingCommentId === comment._id && (
+                                                            <Button onClick={() => handleUpdateComment(report._id, comment._id)}>Submit Edit</Button>
+                                                        )}
+                                                    </Box>
+                                                ))
+                                            ) : (
+                                                <div>No Comments Available</div>
+                                            )}
                                         </Box>
 
+                                        {/* Add Comment Text Field and Button */}
                                         <TextField
                                             label="Add a comment..."
                                             multiline
