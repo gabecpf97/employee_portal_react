@@ -1,7 +1,24 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Card, CardContent, CardHeader, TextField, Button, Box, Grid, Paper, Pagination, Chip } from '@mui/material';
-import { fetchReports, addReport, addComment, updateComment } from '../../store/slices/facilityReports.slice.js';
+import { Card, 
+    CardContent, 
+    CardHeader, 
+    TextField, 
+    Button, 
+    Box, 
+    Grid, 
+    Paper, 
+    Pagination, 
+    Chip, 
+    Select, 
+    MenuItem, 
+    InputLabel, 
+    FormControl } from '@mui/material';
+import { fetchReports, 
+    addReport, 
+    addComment, 
+    updateComment,
+    updateStatus, } from '../../store/slices/facilityReports.slice.js';
 
 const getStatusChipProps = (status) => {
     switch (status) {
@@ -23,6 +40,7 @@ const FacilityReports = () => {
     const [editingCommentId, setEditingCommentId] = useState(null);
     const [updatedCommentTexts, setUpdatedCommentTexts] = useState({});
     const [currentPage, setCurrentPage] = useState(1);
+    const [newStatus, setNewStatus] = useState({});
     const itemsPerPage = 6;
 
     const dispatch = useDispatch();
@@ -121,6 +139,28 @@ const FacilityReports = () => {
 
     const paginatedReports = reports.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
+    const handleStatusChange = (reportId, value) => {
+        setNewStatus((prev) => ({
+            ...prev,
+            [reportId]: value
+        }));
+    };
+
+    const handleUpdateStatus = async (reportId) => {
+        const statusToUpdate = newStatus[reportId];
+        if (!statusToUpdate) {
+            alert('Please select a valid status.');
+            return;
+        }
+        try {
+            await dispatch(updateStatus({ reportId, status: statusToUpdate })).unwrap();
+            dispatch(fetchReports());
+        } catch (error) {
+            console.error('Failed to update status:', error);
+            alert('Failed to update status: ' + error.message);
+        }
+    };
+
     return (
         <Box m={3}>
             <Paper elevation={3} style={{ padding: '20px', marginBottom: '20px' }}>
@@ -162,10 +202,30 @@ const FacilityReports = () => {
                                 />
                                 <CardContent>
                                     <div><h3>Description: {report.description}</h3></div>
-                                    {/* <div>Status: {report.status}</div> */}
-                                    <Box mt={1} mb={2}>
-                                        <Chip {...getStatusChipProps(report.status)} />
-                                    </Box>
+                                    <FormControl fullWidth margin="normal">
+                                            <InputLabel><h2>Status: </h2></InputLabel>
+                                            <br></br>
+                                            <br></br>
+                                            <Box mt={1} mb={2}>
+                                                <Chip {...getStatusChipProps(report.status)} />
+                                            </Box>
+                                            
+                                            <Select
+                                                value={newStatus[report._id] || report.status}
+                                                onChange={(e) => handleStatusChange(report._id, e.target.value)}
+                                            >
+                                                <MenuItem value="open">Open</MenuItem>
+                                                <MenuItem value="in progress">In Progress</MenuItem>
+                                                <MenuItem value="closed">Closed</MenuItem>
+                                            </Select>
+                                    </FormControl>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={() => handleUpdateStatus(report._id)}
+                                    >
+                                        Update Status
+                                    </Button>
                                     <Box mt={2}>
                                         <h3>Comments:</h3>
                                         <Box
@@ -178,7 +238,7 @@ const FacilityReports = () => {
                                         >
                                             {report.comments.map((comment) => (
                                                 <Box key={`${report._id}-${comment._id}`} mb={2}>
-                                                    <div>
+                                                    <span>
                                                         Message: {editingCommentId === comment._id ? (
                                                             <TextField
                                                                 value={updatedCommentTexts[comment._id] || comment.description}
@@ -188,9 +248,10 @@ const FacilityReports = () => {
                                                                 fullWidth
                                                             />
                                                         ) : comment.description}
-                                                    </div>
-                                                    <div>Created by: {comment.createdBy}</div>
-                                                    <div>Time: {new Date(Number(comment.timestamp)).toLocaleString()}</div>
+                                                    </span>
+                                                    <br></br>
+                                                    <span>Created by: {comment.createdBy} </span>
+                                                    <>Time: {new Date(Number(comment.timestamp)).toLocaleString()}</>
                                                     {comment.createdBy === currentUserId && (
                                                         <Button variant="outlined" onClick={() => toggleEditMode(comment._id)}>
                                                             {editingCommentId === comment._id ? 'Cancel' : 'Edit'}
