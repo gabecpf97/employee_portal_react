@@ -32,7 +32,7 @@ const App = () => {
             }
           >
             <Route path="/" element={<Home />} />
-            <Route path="/registration/:token" element={<RegistrationForm />} />
+            
             <Route path="/onboarding" element={<Onboarding />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/visa" element={<Visa />} />
@@ -40,6 +40,7 @@ const App = () => {
             <Route path="/housing/reports" element={<FacilityReports />} />
           </Route>
           <Route path="/login" element={<Login />} />
+          <Route path="/registration/:token" element={<RegistrationForm />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>

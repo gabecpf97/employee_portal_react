@@ -4,6 +4,8 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setUsername, setPassword, setEmail } from "../../store/slices/user.slice";
 import { useNavigate } from "react-router-dom"
+import { List, ListItem, Typography, Input, Button, Box } from '@mui/material';
+
 
 // function to sanitize the input fields
 function sanitizeInput(input) {
@@ -99,36 +101,54 @@ function RegistrationForm() {
         )
     }
     return (
-        <form onSubmit={handleSubmit}>
-        <label htmlFor="username">Username: </label>
-        <input
-            type="text"
-            name="username"
-            value={user.username}
-            onChange={handleInputChange}
-            placeholder="Username"
-        />
-        <br></br>
-        <label htmlFor="email">Email: </label>
-        <input
-            type="email"
-            name="email"
-            value={user.email}
-            onChange={handleInputChange}
-            placeholder="Email"
-        />
-        <br></br>
-        <label htmlFor="password">Password: </label>
-        <input
-            type="password"
-            name="password"
-            value={user.password}
-            onChange={handleInputChange}
-            placeholder="Password"
-        />
-        <br></br>
-        <button type="submit">Register</button>
-        </form>
+        <List className="container" style={{ margin: "0 auto", maxWidth: "400px" }}>
+            <Typography variant="h5" style={{ margin: "0 70px" }}>
+                Register for an Account
+            </Typography>
+            <form onSubmit={handleSubmit}>
+                <ListItem>
+                    <label htmlFor="username">Username:</label>
+                    <Input
+                        type="text"
+                        name="username"
+                        value={user.username}
+                        onChange={handleInputChange}
+                        placeholder="Username"
+                        required
+                        fullWidth
+                    />
+                </ListItem>
+                <ListItem>
+                    <label htmlFor="email">Email:</label>
+                    <Input
+                        type="email"
+                        name="email"
+                        value={user.email}
+                        onChange={handleInputChange}
+                        placeholder="Email"
+                        required
+                        fullWidth
+                    />
+                </ListItem>
+                <ListItem>
+                    <label htmlFor="password">Password:</label>
+                    <Input
+                        type="password"
+                        name="password"
+                        value={user.password}
+                        onChange={handleInputChange}
+                        placeholder="Password"
+                        required
+                        fullWidth
+                    />
+                </ListItem>
+                <Box mt={2} display="flex" justifyContent="center">
+                    <Button variant="contained" type="submit">
+                        Register
+                    </Button>
+                </Box>
+            </form>
+        </List>
     );
 }
 
