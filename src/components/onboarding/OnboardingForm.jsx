@@ -23,7 +23,6 @@ const defaultContact = {
 };
 
 const OnboardingForm = () => {
-  const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const application = useSelector((state) =>
     getApplication.selectById(state, "application")
@@ -165,7 +164,7 @@ const OnboardingForm = () => {
         SSN: ssn,
         DOB: dob,
         gender: gender,
-        citizenship: citiType ? citiType : "non-citizen",
+        citizenship: citiBool ? citiType : "non-citizen",
         workAuthorization_type: formType,
         workAuthorization_document: optReceipt,
         workAuthorization_startDate: startDate,
@@ -180,20 +179,14 @@ const OnboardingForm = () => {
           email: refEmail,
           relationship: refRel,
         }),
-        emergency: contacts,
+        emergency: JSON.stringify(contacts),
         feedback: "",
       };
-      newApplication.userId = user.userId;
-      newApplication.status = user.userStatus;
+      newApplication.userId = localStorage.getItem("userId");
+      newApplication.status = localStorage.getItem("userStatus");
       const formData = new FormData();
       for (const key in newApplication) {
-        if (key === "emergency") {
-          contacts.forEach((value, idx) => {
-            formData.append(`emergency[${idx}]`, JSON.stringify(value));
-          });
-        } else {
-          formData.append(key, newApplication[key]);
-        }
+        formData.append(key, newApplication[key]);
       }
       let url = "http://localhost:3000/application/create";
       let method = "POST";
@@ -547,11 +540,7 @@ const OnboardingForm = () => {
       application.status !== "pending" &&
       application.status !== "approved"
     ) {
-      if (/^\d{0,10}$/.test(e.target.value)) {
-        setRefPhone(e.target.value);
-      } else {
-        setError("Please enter a 10 digit phone number only");
-      }
+      setRefPhone(e.target.value);
     }
   };
 
