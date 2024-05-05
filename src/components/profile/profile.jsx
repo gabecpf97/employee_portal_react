@@ -571,7 +571,6 @@ function Profile() {
                                 value={userData.application.workAuthorization.type}
                                 name="type"
                                 disabled
-                                onChange={handleWorkChange}
                             />
                             <TextField
                                 label="Start Date"
@@ -583,7 +582,6 @@ function Profile() {
                                 value={userData.application.workAuthorization.startDate}
                                 name="startDate"
                                 disabled
-                                onChange={handleWorkChange}
                             />
                             <TextField
                                 label="End Date"
@@ -595,7 +593,6 @@ function Profile() {
                                 value={userData.application.workAuthorization.endDate}
                                 name="endDate"
                                 disabled
-                                onChange={handleWorkChange}
                             />
                         </Box>
 
