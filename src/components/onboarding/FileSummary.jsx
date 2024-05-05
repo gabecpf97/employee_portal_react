@@ -25,7 +25,6 @@ const FileSummary = () => {
           >
             Open document
           </Button>
-          {/* <img src={application.picture} /> */}
           <h4>Driver Licence: </h4>
           <Button
             component="a"
@@ -36,7 +35,6 @@ const FileSummary = () => {
           >
             Open document
           </Button>
-          {/* <img src={application.driverLicense.document} /> */}
           <h4>Work Authorization: </h4>
           <Button
             component="a"
@@ -47,7 +45,6 @@ const FileSummary = () => {
           >
             Open document
           </Button>
-          {/* <img src={application.workAuthorization.document} /> */}
         </>
       )}
     </div>

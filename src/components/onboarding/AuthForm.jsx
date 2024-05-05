@@ -1,5 +1,5 @@
 import FormField from "./FormField";
-import { Select, MenuItem, Input, InputLabel } from "@mui/material";
+import { Select, MenuItem, Input, InputLabel, TextField } from "@mui/material";
 
 /* eslint-disable react/prop-types */
 const AuthForm = (props) => {
@@ -96,19 +96,23 @@ const AuthForm = (props) => {
               isRequire={false}
             />
           )}
-          <FormField
-            fieldName="Start Date"
+          <InputLabel>Start Date</InputLabel>
+          <TextField
             type="Date"
-            changeFn={(e) => onStartDateChange(e)}
+            variant="standard"
+            onChange={(e) => onStartDateChange(e)}
             value={startDate}
-            isRequire={false}
+            required={false}
+            inputProps={{ max: endate }}
           />
-          <FormField
-            fieldName="End Date"
+          <InputLabel>End Date</InputLabel>
+          <TextField
             type="Date"
-            changeFn={(e) => onEndDateChange(e)}
+            variant="standard"
+            onChange={(e) => onEndDateChange(e)}
             value={endate}
-            isRequire={false}
+            required={false}
+            inputProps={{ min: startDate }}
           />
         </div>
       )}
@@ -134,8 +138,8 @@ const AuthForm = (props) => {
               value={driverNum}
               isRequire={driverBool}
             />
+            <InputLabel>Expiration Date</InputLabel>
             <FormField
-              fieldName="expiration date"
               type="Date"
               changeFn={(e) => onExpDateChagne(e)}
               value={expDate}
