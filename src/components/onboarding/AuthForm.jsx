@@ -51,8 +51,8 @@ const AuthForm = (props) => {
               value={citiType}
               onChange={(e) => onCitiTypeChange(e)}
             >
-              <MenuItem value="Green Card">Green Card</MenuItem>
-              <MenuItem value="Citizen">Citizen</MenuItem>
+              <MenuItem value="green card">Green Card</MenuItem>
+              <MenuItem value="citizen">Citizen</MenuItem>
             </Select>
           </div>
         </div>
