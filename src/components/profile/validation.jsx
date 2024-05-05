@@ -16,13 +16,16 @@ function validateFormData(formData) {
 
     if (isEmpty(formEntries['firstName'])) errors.push("First name is required.");
     if (isEmpty(formEntries['lastName'])) errors.push("Last name is required.");
+    if (isEmpty(formEntries['address'])) errors.push("Address is required.");
+    if (isEmpty(formEntries['cellPhone'])) errors.push("Cellphone number is required.");
+
     if (!validateEmail(formEntries['email'])) errors.push("Email format is invalid.");
-    if (isEmpty(formEntries['status'])) errors.push("Status is required.");
+    
     
     if (isNaN(new Date(formEntries['DOB']).getTime())) errors.push("Date of birth is invalid.");
 
-    if(/^\d{9}$/.test(formEntries['SSN']) || isEmpty(formEntries['SSN'])) errors.push("SSN is not valid");
-    if(isEmpty(formEntries['gender'])) errors.push("Gender is required");
+    if(!(/^\d{10}$/.test(formEntries['SSN'])) || isEmpty(formEntries['SSN'])) errors.push("SSN is not valid");
+    
 
 
     // Check required file fields
@@ -36,8 +39,8 @@ function validateFormData(formData) {
         if (formData.has(key)) {
             const file = formData.get(key);
             // Check if the file is present and its type is not 'image/png'
-            if (file.name && file.type !== 'image/png') {
-                errors.push(`${name} must be a PNG image.`);
+            if (file.name && ((!file.type.startsWith('image/'))&& (file.type !== 'application/pdf'))) {
+                errors.push(`${name} must be an image or PDF file.`);
             }
         }
     });

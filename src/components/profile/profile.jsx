@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 //import { useSelector, useDispatch } from 'react-redux';
 import Button from "@mui/material/Button";
-import { TextField, Box, Typography } from "@mui/material";
+import { TextField, Box, Typography, Alert } from "@mui/material";
 import { Input, InputLabel } from "@mui/material";
 import validateFormData from "./validation";
 
@@ -14,6 +14,8 @@ function Profile() {
   const [originalData, setOriginalData] = useState(null);
   const [userEdit, setUserEdit] = useState(false);
   const [appEdit, setAppEdit] = useState(false);
+  const [error, setError] = useState("");
+
 
   const token = localStorage.getItem("authToken");
   const userId = localStorage.getItem("userId");
@@ -40,7 +42,7 @@ function Profile() {
           setUserData(response.data);
           setOriginalData(response.data);
         } catch (error) {
-          console.error("Error fetching user data:", error);
+          console.error("Error fetching user data:", error.data.message);
         }
       };
       fetchData();
@@ -81,10 +83,10 @@ function Profile() {
       console.log(response.data);
       location.reload();
     } catch (error) {
-      console.error("Error changing user profile:", error);
-      setUserData(originalData);
+      setError(error.response.data.message);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      console.error("Error changing user profile:", error.response.data.message);
     }
-    setUserEdit(false);
   };
 
   const handleAppEditSave = async () => {
@@ -146,17 +148,21 @@ function Profile() {
         JSON.stringify(userData.application.reference)
       );
       //const emergency_blob = new Blob([JSON.stringify(userData.application.emergency)],{ type: 'application/json'})
-      formData.append(
-        "emergency",
-        JSON.stringify(userData.application.emergency)
-      );
+      // formData.append(
+      //   "emergency",
+      //   JSON.stringify(userData.application.emergency)
+      // );
+      userData.application.emergency.forEach((value, idx) => {
+        formData.append(`emergency[${idx}]`, JSON.stringify(value));
+      });
 
       // for (let [key, value] of formData.entries()) {
       //     console.log(key, value);
       // }
       const errors = validateFormData(formData);
       if (errors) {
-        alert(errors);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        setError(errors)
         return;
       }
 
@@ -172,7 +178,8 @@ function Profile() {
       console.log(response.data);
       location.reload();
     } catch (error) {
-      alert(`Error: ${error.response.status} - ${error.response.data.message}`);
+      setError(error.response.data.message);
+      window.scrollTo({ top: 0, behavior: "smooth" });
       console.error("Error changing user profile:", error.response.data);
       //setUserData(originalData);
     }
@@ -182,12 +189,14 @@ function Profile() {
   const handleUserEditCancel = () => {
     if (window.confirm("Are you sure you want to discard all changes?")) {
       setUserData(originalData);
+      setError("")
       setUserEdit(false);
     }
   };
   const handleAppEditCancel = () => {
     if (window.confirm("Are you sure you want to discard all changes?")) {
       setUserData(originalData);
+      setError("")
       setAppEdit(false);
     }
   };
@@ -267,6 +276,7 @@ function Profile() {
         <div>
           <Box sx={{ margin: 2 }}>
             <Typography variant="h6">Account Information</Typography>
+            {userEdit && error && <Alert severity="warning">{error}</Alert>}
             <Box component="form" noValidate autoComplete="off">
               <TextField
                 label="Username"
@@ -285,7 +295,7 @@ function Profile() {
                 margin="normal"
                 value={userData.user.email}
                 name="email"
-                disabled={!userEdit}
+                disabled
                 onChange={handleValueChange}
               />
               <TextField
@@ -329,6 +339,32 @@ function Profile() {
 
           <div>
             <Typography variant="h6">Personal Information</Typography>
+            {appEdit && error && <Alert severity="warning">{error}</Alert>}
+            <Box sx={{ display: "flex", gap: 1, mt: 2,mb:2, ml:2}}>
+              <Button
+                variant="contained"
+                onClick={handleAppEdit}
+                sx={{ display: appEdit ? "none" : "flex" }}
+              >
+                Edit
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleAppEditSave}
+                sx={{ display: appEdit ? "flex" : "none" }}
+              >
+                Save
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleAppEditCancel}
+                sx={{ display: appEdit ? "flex" : "none" }}
+              >
+                Cancel
+              </Button>
+            </Box>
             <Box sx={{ padding: 2, border: "1px solid #ccc" }}>
               <Typography variant="subtitle1" sx={{}}>
                 Basic Information
@@ -401,7 +437,7 @@ function Profile() {
                 margin="normal"
                 value={userData.application.email}
                 name="email"
-                disabled={!appEdit}
+                disabled
                 onChange={handleAppValueChange}
               />
               <TextField
@@ -416,7 +452,7 @@ function Profile() {
               />
               <TextField
                 label="Date of Birth"
-                type="text"
+                type="Date"
                 variant="outlined"
                 fullWidth
                 margin="normal"
@@ -527,7 +563,7 @@ function Profile() {
               />
             </Box>
 
-            {/* <Box sx={{ padding: 2, border: '1px solid #ccc' }}>
+            <Box sx={{ padding: 2, border: '1px solid #ccc' }}>
                             <Typography variant="subtitle1" gutterBottom>Employment</Typography>
                             <TextField
                                 label="Visa Type"
@@ -536,8 +572,7 @@ function Profile() {
                                 margin="normal"
                                 value={userData.application.workAuthorization.type}
                                 name="type"
-                                disabled={!appEdit}
-                                onChange={handleWorkChange}
+                                disabled
                             />
                             <TextField
                                 label="Start Date"
@@ -548,8 +583,7 @@ function Profile() {
                                 InputLabelProps={{ shrink: true }}
                                 value={userData.application.workAuthorization.startDate}
                                 name="startDate"
-                                disabled={!appEdit}
-                                onChange={handleWorkChange}
+                                disabled
                             />
                             <TextField
                                 label="End Date"
@@ -560,10 +594,9 @@ function Profile() {
                                 InputLabelProps={{ shrink: true }}
                                 value={userData.application.workAuthorization.endDate}
                                 name="endDate"
-                                disabled={!appEdit}
-                                onChange={handleWorkChange}
+                                disabled
                             />
-                        </Box> */}
+                        </Box>
 
             <Box sx={{ padding: 2, border: "1px solid #ccc" }}>
               <Typography variant="subtitle1" gutterBottom>
@@ -661,8 +694,9 @@ function Profile() {
               </a>
               <a
                 href={userData.application.driverLicense.document}
-                download
+                download="downloaded_filename.png"
                 style={{ textDecoration: "none" }}
+                target="_blank"
               >
                 <Button variant="contained" color="primary">
                   Download
@@ -702,8 +736,8 @@ function Profile() {
               </a>
               <a
                 href={userData.application.workAuthorization.document}
-                download
                 style={{ textDecoration: "none" }}
+                target="_blank"
               >
                 <Button variant="contained" color="primary">
                   Download
