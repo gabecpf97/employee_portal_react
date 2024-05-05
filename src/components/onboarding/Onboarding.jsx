@@ -19,6 +19,10 @@ const Onboarding = () => {
     dispatch(fetchApplication());
   }, [dispatch]);
 
+  useEffect(() => {
+    localStorage.setItem("userStatus", application?.status);
+  }, [application]);
+
   return (
     <Box
       sx={{

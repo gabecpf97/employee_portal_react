@@ -12,7 +12,11 @@ export const fetchVisa = createAsyncThunk("visa/fetchVisa", async () => {
   });
   const idData = await idResponse.json();
   if (!idResponse.ok) {
-    console.log("handle error in fetchVisa");
+    if (idResponse.status == 400) {
+      return { _id: 0 };
+    } else {
+      console.log("handle error in fetchVisa", idResponse.status);
+    }
   } else {
     const visaResponse = await fetch(
       `http://localhost:3000/visa/${idData.requestId}`,
@@ -31,7 +35,7 @@ export const fetchVisa = createAsyncThunk("visa/fetchVisa", async () => {
   }
 });
 
-const visaAdapter = createEntityAdapter({ selectId: (visa) => visa._id });
+const visaAdapter = createEntityAdapter({ selectId: () => "visa" });
 
 const visaSlice = createSlice({
   name: "visa",

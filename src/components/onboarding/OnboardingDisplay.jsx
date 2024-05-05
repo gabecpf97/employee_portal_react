@@ -36,33 +36,37 @@ const OnboardingDisplay = () => {
       <p>color: {application.car.color}</p>
       <h4>Citizenship</h4>
       <p>citizenship: {application.citizenship}</p>
-      <p>type: {application.workAuthorization.type}</p>
-      <p>document:</p>
-      <Button
-        component="a"
-        variant="contained"
-        rel="noopener"
-        target="_blank"
-        href={application.workAuthorization.document}
-      >
-        Open document
-      </Button>
-      <p>
-        startDate:{" "}
-        {
-          new Date(application.workAuthorization.startDate)
-            .toISOString()
-            .split("T")[0]
-        }
-      </p>
-      <p>
-        endDate:{" "}
-        {
-          new Date(application.workAuthorization.endDate)
-            .toISOString()
-            .split("T")[0]
-        }
-      </p>
+      {application.citizenship === "non-citizen" && (
+        <>
+          <p>type: {application.workAuthorization.type}</p>
+          <p>document:</p>
+          <Button
+            component="a"
+            variant="contained"
+            rel="noopener"
+            target="_blank"
+            href={application.workAuthorization.document}
+          >
+            Open document
+          </Button>
+          <p>
+            startDate:{" "}
+            {
+              new Date(application.workAuthorization.startDate)
+                .toISOString()
+                .split("T")[0]
+            }
+          </p>
+          <p>
+            endDate:{" "}
+            {
+              new Date(application.workAuthorization.endDate)
+                .toISOString()
+                .split("T")[0]
+            }
+          </p>
+        </>
+      )}
       <h4>Driver License</h4>
       <p>number: {application.driverLicense.number}</p>
       <p>
