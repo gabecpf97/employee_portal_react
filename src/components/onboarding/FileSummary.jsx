@@ -21,30 +21,38 @@ const FileSummary = () => {
             variant="contained"
             rel="noopener"
             target="_blank"
-            href={application.picture}
+            href={application?.picture}
           >
             Open document
           </Button>
-          <h4>Driver Licence: </h4>
-          <Button
-            component="a"
-            variant="contained"
-            rel="noopener"
-            target="_blank"
-            href={application.driverLicense.document}
-          >
-            Open document
-          </Button>
-          <h4>Work Authorization: </h4>
-          <Button
-            component="a"
-            variant="contained"
-            rel="noopener"
-            target="_blank"
-            href={application.workAuthorization.document}
-          >
-            Open document
-          </Button>
+          {application.driverLicense?.document && (
+            <>
+              <h4>Driver Licence: </h4>
+              <Button
+                component="a"
+                variant="contained"
+                rel="noopener"
+                target="_blank"
+                href={application.driverLicense?.document}
+              >
+                Open document
+              </Button>
+            </>
+          )}
+          {application.workAuthorization?.document && (
+            <>
+              <h4>Work Authorization: </h4>
+              <Button
+                component="a"
+                variant="contained"
+                rel="noopener"
+                target="_blank"
+                href={application.workAuthorization?.document}
+              >
+                Open document
+              </Button>
+            </>
+          )}
         </>
       )}
     </div>

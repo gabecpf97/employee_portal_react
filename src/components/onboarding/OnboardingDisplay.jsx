@@ -7,6 +7,8 @@ const OnboardingDisplay = () => {
     getApplication.selectById(state, "application")
   );
 
+  console.log(application);
+
   return (
     <div className="pending_onboarding">
       <h4>User information: </h4>
@@ -51,42 +53,47 @@ const OnboardingDisplay = () => {
           </Button>
           <p>
             startDate:{" "}
-            {
-              new Date(application.workAuthorization.startDate)
-                .toISOString()
-                .split("T")[0]
-            }
+            {application.workAuthorization
+              ? new Date(application.workAuthorization.startDate)
+                  .toISOString()
+                  .split("T")[0]
+              : ""}
           </p>
           <p>
             endDate:{" "}
-            {
-              new Date(application.workAuthorization.endDate)
-                .toISOString()
-                .split("T")[0]
-            }
+            {application.workAuthorization
+              ? new Date(application.workAuthorization.endDate)
+                  .toISOString()
+                  .split("T")[0]
+              : ""}
           </p>
         </>
       )}
       <h4>Driver License</h4>
-      <p>number: {application.driverLicense.number}</p>
-      <p>
-        expirationDate:{" "}
-        {
-          new Date(application.driverLicense.expirationDate)
-            .toISOString()
-            .split("T")[0]
-        }
-      </p>
-      <p>document:</p>
-      <Button
-        component="a"
-        variant="contained"
-        rel="noopener"
-        target="_blank"
-        href={application.driverLicense.document}
-      >
-        Open document
-      </Button>
+      {application.driverLicense.number && (
+        <>
+          <p>number: {application.driverLicense.number}</p>
+          <p>
+            expirationDate:{" "}
+            {application.driverLicense?.number
+              ? new Date(application.driverLicense.expirationDate)
+                  .toISOString()
+                  .split("T")[0]
+              : ""}
+          </p>
+          <p>document:</p>
+          <Button
+            component="a"
+            variant="contained"
+            rel="noopener"
+            target="_blank"
+            href={application.driverLicense.document}
+          >
+            Open document
+          </Button>
+        </>
+      )}
+      {!application.driverLicense.number && <p>None</p>}
       <h4>Reference</h4>
       <p>firstName: {application.reference.firstName}</p>
       <p>lastName: {application.reference.lastName}</p>
