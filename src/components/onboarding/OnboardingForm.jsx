@@ -88,35 +88,41 @@ const OnboardingForm = () => {
       setColor(application.car.color);
       setCitiBool(application.citizenship !== "non-citizen" ? true : false);
       setCitiType(application.citizenship);
-      setFormType(application.workAuthorization.type);
+      setFormType(application.workAuthorization?.type);
       setOPTReceipt(
         application.workAuthorization
-          ? application.workAuthorization.document
+          ? application.workAuthorization?.document
           : ""
       );
       setOtherForm(
-        application.workAuthorization.type == "other"
-          ? application.workAuthorization.document
+        application.workAuthorization?.type == "other"
+          ? application.workAuthorization?.document
           : ""
       );
       setStartDate(
-        new Date(application.workAuthorization.startDate)
-          .toISOString()
-          .split("T")[0]
+        application.workAuthorization
+          ? new Date(application.workAuthorization?.startDate)
+              .toISOString()
+              .split("T")[0]
+          : ""
       );
       setEndDate(
-        new Date(application.workAuthorization.endDate)
-          .toISOString()
-          .split("T")[0]
+        application.workAuthorization
+          ? new Date(application.workAuthorization?.endDate)
+              .toISOString()
+              .split("T")[0]
+          : ""
       );
-      setDriverBool(application.driverLicense ? true : false);
-      setDriverNum(application.driverLicense.number);
+      setDriverBool(application.driverLicense?.number ? true : false);
+      setDriverNum(application.driverLicense?.number);
       setExpDate(
-        new Date(application.driverLicense.expirationDate)
-          .toISOString()
-          .split("T")[0]
+        application.driverLicense?.number
+          ? new Date(application.driverLicense?.expirationDate)
+              .toISOString()
+              .split("T")[0]
+          : ""
       );
-      setDriverFile(application.driverLicense.document);
+      setDriverFile(application.driverLicense?.document);
       setRefFname(application.reference.firstName);
       setRefLname(application.reference.lastName);
       setRefMname(application.reference.middleName);
@@ -190,6 +196,7 @@ const OnboardingForm = () => {
       }
       let url = "http://localhost:3000/application/create";
       let method = "POST";
+      console.log(newApplication);
       if (application.status === "rejected") {
         url = `http://localhost:3000/application/update/${application._id}`;
         method = "PUT";
@@ -203,6 +210,7 @@ const OnboardingForm = () => {
       });
       const data = await response.json();
       if (!response.ok) {
+        console.log(response);
         setError(data.message);
         window.scrollTo({ top: 0, behavior: "smooth" });
       } else {
