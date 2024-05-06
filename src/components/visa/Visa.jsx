@@ -8,6 +8,10 @@ const Visa = () => {
   const visa = useSelector((state) => getVisa.selectById(state, "visa"));
   const [file, setFile] = useState("");
   const [empty, setEmpty] = useState(false);
+  const emptyFile =
+    "https://employee-visa-documents.s3.us-east-2.amazonaws.com/Sample+Template.pdf";
+  const templete =
+    "https://employee-visa-documents.s3.us-east-2.amazonaws.com/Empty+Template.pdf";
 
   useEffect(() => {
     dispatch(fetchVisa());
@@ -64,6 +68,29 @@ const Visa = () => {
           <>
             {visa[visa.step]?.status === "rejected" && (
               <h3>Feedback: {visa[visa.step]?.feedback}</h3>
+            )}
+            {visa.step === "I983" && (
+              <Button
+                component="a"
+                variant="contained"
+                rel="noopener"
+                target="_blank"
+                href={emptyFile}
+                style={{ marginBottom: "10px" }}
+              >
+                Sample File
+              </Button>
+            )}
+            {(visa.step === "I20" || visa.step === "I983") && (
+              <Button
+                component="a"
+                variant="contained"
+                rel="noopener"
+                target="_blank"
+                href={templete}
+              >
+                Templete File
+              </Button>
             )}
             {(visa[visa.step]?.status === "rejected" ||
               visa[visa.step]?.status === "unuploaded") && (
